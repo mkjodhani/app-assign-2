@@ -18,33 +18,36 @@ public class PropertyCLI {
         Address address;
         int numberOfBedrooms;
         int numberOfBathrooms;
-        double squareFootage;
+        double squareFootage, rent;
         numberOfBedrooms = Input.getInteger("Provide number of bedrooms:");
         numberOfBathrooms = Input.getInteger("Provide number of bathrooms:");
         squareFootage = Input.getDouble("Provide square footage:");
+        rent = Input.getDouble("Provide rent:");
         address = AddressCLI.generateAddress();
-        return new House(address,numberOfBedrooms,numberOfBathrooms,squareFootage);
+        return new House(address,numberOfBedrooms,numberOfBathrooms,squareFootage,rent);
     };
     public static Apartment genearteApartment(){
         Address address;
         int numberOfBedrooms, numberOfBathrooms, aptNumber;
-        double squareFootage;
+        double squareFootage, rent;
         numberOfBedrooms = Input.getInteger("Provide number of bedrooms:");
         numberOfBathrooms = Input.getInteger("Provide number of bathrooms:");
         squareFootage = Input.getDouble("Provide square footage:");
         aptNumber = Input.getInteger("Provide apartment number:");
+        rent = Input.getDouble("Provide rent:");
         address = AddressCLI.generateAddress();
-        return new Apartment(address,numberOfBedrooms,numberOfBathrooms,squareFootage,aptNumber);
+        return new Apartment(address,numberOfBedrooms,numberOfBathrooms,squareFootage,aptNumber,rent);
     };
     public static Condo genearteCondo(){
         Address address;
         int numberOfBathrooms, numberOfBedrooms, unitNumber;
-        double squareFootage;
+        double squareFootage, rent;
         numberOfBedrooms = Input.getInteger("Provide number of bedrooms:");
         numberOfBathrooms = Input.getInteger("Provide number of bathrooms:");
         squareFootage = Input.getDouble("Provide square footage:");
         unitNumber = Input.getInteger("Provide unit number:");
+        rent = Input.getDouble("Provide rent:");
         address = AddressCLI.generateAddress();
-        return new Condo(address,numberOfBedrooms,numberOfBathrooms,squareFootage,unitNumber);
+        return new Condo(address,numberOfBedrooms,numberOfBathrooms,squareFootage,unitNumber,rent);
     };
 }

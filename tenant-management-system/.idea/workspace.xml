@@ -59,13 +59,20 @@
       <recent name="" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="test.users" />
       <recent name="test.accounting" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.AccountingServiceTest">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
+  <component name="RunManager" selected="JUnit.TestSuite">
+    <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test.TestRunner" />
       <module name="tenant-management-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -85,7 +92,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AccountingServiceTest.addProperty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AccountingServiceTest.rentUnit" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tenant-management-system" />
       <extension name="coverage">
         <pattern>
@@ -95,13 +102,13 @@
       </extension>
       <option name="PACKAGE_NAME" value="test.accounting" />
       <option name="MAIN_CLASS_NAME" value="test.accounting.AccountingServiceTest" />
-      <option name="METHOD_NAME" value="addProperty" />
+      <option name="METHOD_NAME" value="rentUnit" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AccountingServiceTest.addTenant" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AccountingServiceTest.subscribeProperty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tenant-management-system" />
       <extension name="coverage">
         <pattern>
@@ -111,18 +118,34 @@
       </extension>
       <option name="PACKAGE_NAME" value="test.accounting" />
       <option name="MAIN_CLASS_NAME" value="test.accounting.AccountingServiceTest" />
-      <option name="METHOD_NAME" value="addTenant" />
+      <option name="METHOD_NAME" value="subscribeProperty" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestSuite" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tenant-management-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="test" />
+      <option name="MAIN_CLASS_NAME" value="test.TestSuite" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TestSuite" />
         <item itemvalue="JUnit.AccountingServiceTest" />
-        <item itemvalue="JUnit.AccountingServiceTest.addProperty" />
-        <item itemvalue="JUnit.AccountingServiceTest.addTenant" />
-        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.AccountingServiceTest.rentUnit" />
+        <item itemvalue="JUnit.AccountingServiceTest.subscribeProperty" />
+        <item itemvalue="Application.TestRunner" />
       </list>
     </recent_temporary>
   </component>
@@ -147,7 +170,8 @@
       <workItem from="1678246560155" duration="1822000" />
       <workItem from="1678315578942" duration="193000" />
       <workItem from="1678316807166" duration="382000" />
-      <workItem from="1678419679347" duration="329000" />
+      <workItem from="1678419679347" duration="7542000" />
+      <workItem from="1678470740376" duration="12198000" />
     </task>
     <servers />
   </component>

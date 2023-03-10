@@ -3,6 +3,7 @@ package model.person;
 import view.cli.helper.Table;
 
 import java.util.Date;
+import java.util.Observer;
 
 /**
  * @author mkjodhani
@@ -10,7 +11,7 @@ import java.util.Date;
  * @project Tenant Management System
  * @since 02/03/23
  */
-public abstract class Person {
+public abstract class Person implements Observer {
 
     private static int totalPerson = 0;
     protected int id;

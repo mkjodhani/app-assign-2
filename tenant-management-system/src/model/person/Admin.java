@@ -1,6 +1,9 @@
 package model.person;
 
+import model.property.Property;
+
 import java.util.Date;
+import java.util.Observable;
 
 /**
  * @author mkjodhani
@@ -11,5 +14,12 @@ import java.util.Date;
 public class Admin extends Person{
     public Admin(String firstName, String lastName, Date dateOfBirth, String mobileNumber) {
         super(firstName, lastName, dateOfBirth, mobileNumber);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        Property property = (Property) arg;
+        System.out.println("Admin Panel");
+        property.show();
     }
 }

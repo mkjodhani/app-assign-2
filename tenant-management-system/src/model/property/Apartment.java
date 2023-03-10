@@ -12,24 +12,9 @@ import model.geography.Address;
 public class Apartment extends Property{
     private int aptNumber;
 
-    public Apartment(Address address, int numberOfBedrooms, int numberOfBathrooms, double squareFootage, int aptNumber) {
-        super(address, numberOfBedrooms, numberOfBathrooms, squareFootage, AVAILABILITY_TYPE.READY_TO_BE_RENOVATED,PROPERTY_TYPE.APARTMENT);
+    public Apartment(Address address, int numberOfBedrooms, int numberOfBathrooms, double squareFootage, int aptNumber, double rent) {
+        super(address, numberOfBedrooms, numberOfBathrooms, squareFootage,PROPERTY_TYPE.APARTMENT,rent);
         this.aptNumber = aptNumber;
-    }
-
-    @Override
-    public void addListener(InvalidationListener listener) {
-
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-
-    }
-
-    @Override
-    public void update() {
-
     }
 
     @Override
