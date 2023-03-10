@@ -1,6 +1,6 @@
 package model.notificaiton;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author mkjodhani
@@ -9,15 +9,15 @@ import java.time.LocalDate;
  * @since 02/03/23
  */
 public class Message {
-    private LocalDate timeStamp;
+    private Date timeStamp;
     private String message;
 
-    public Message(LocalDate timeStamp, String message) {
+    public Message(Date timeStamp, String message) {
         this.timeStamp = timeStamp;
         this.message = message;
     }
 
-    public LocalDate getTimeStamp() {
+    public Date getTimeStamp() {
         return timeStamp;
     }
 

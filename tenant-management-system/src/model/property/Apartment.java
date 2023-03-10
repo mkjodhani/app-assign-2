@@ -1,5 +1,6 @@
 package model.property;
 
+import javafx.beans.InvalidationListener;
 import model.geography.Address;
 
 /**
@@ -9,7 +10,30 @@ import model.geography.Address;
  * @since 02/03/23
  */
 public class Apartment extends Property{
-        public Apartment(Address address, int numberOfBedrooms, int numberOfBathrooms, double squareFootage, boolean occupied) {
-        super(address, numberOfBedrooms, numberOfBathrooms, squareFootage, occupied);
+    private int aptNumber;
+
+    public Apartment(Address address, int numberOfBedrooms, int numberOfBathrooms, double squareFootage, int aptNumber) {
+        super(address, numberOfBedrooms, numberOfBathrooms, squareFootage, AVAILABILITY_TYPE.READY_TO_BE_RENOVATED,PROPERTY_TYPE.APARTMENT);
+        this.aptNumber = aptNumber;
+    }
+
+    @Override
+    public void addListener(InvalidationListener listener) {
+
+    }
+
+    @Override
+    public void removeListener(InvalidationListener listener) {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String getFullAddress() {
+        return String.format("Apt %d, %s",aptNumber,super.getAddress().toString());
     }
 }

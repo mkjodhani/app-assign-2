@@ -1,6 +1,8 @@
 package model.person;
 
-import java.time.LocalDate;
+import view.cli.helper.Table;
+
+import java.util.Date;
 
 /**
  * @author mkjodhani
@@ -9,15 +11,19 @@ import java.time.LocalDate;
  * @since 02/03/23
  */
 public abstract class Person {
-    protected String firstName, lastName;
-    protected LocalDate dateOfBirth;
-    protected String mobileNumber;
 
-    public Person(String firstName, String lastName, LocalDate dateOfBirth, String mobileNumber) {
+    private static int totalPerson = 0;
+    protected int id;
+    protected String firstName, lastName;
+    protected Date dateOfBirth;
+    protected String email;
+
+    public Person(String firstName, String lastName, Date dateOfBirth, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
-        this.mobileNumber = mobileNumber;
+        this.email = email;
+        this.id = ++totalPerson;
     }
 
     public String getFirstName() {
@@ -36,19 +42,33 @@ public abstract class Person {
         this.lastName = lastName;
     }
 
-    public LocalDate getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(LocalDate dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public String getMobileNumber() {
-        return mobileNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void show() {
+        Table table = new Table();
+        table.addRow("Person","", Table.POSITION.LEFT);
+        table.addRow("First Name", firstName, Table.POSITION.LEFT);
+        table.addRow("Last Name",lastName, Table.POSITION.LEFT);
+        table.addRow("Date Of Birth",dateOfBirth.toString(), Table.POSITION.LEFT);
+        table.addRow("Email",email, Table.POSITION.LEFT);
+        table.show();
     }
 }

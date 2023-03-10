@@ -16,13 +16,13 @@ public class Address {
         this.postalCode = postalCode;
         this.streetAddressNumber = streetAddressNumber;
     }
-    private Address generateAddress(String street, String city, String province, String postalCode, int streetAddressNumber) {
+    public static Address generateAddress(String street, String city, String province, String postalCode, int streetAddressNumber) {
 //        TODO validate the address
         return new Address(street,city,province,postalCode,streetAddressNumber);
     }
 
     @Override
     public String toString() {
-        return streetAddressNumber + ", "  + street + ", " + city + ", " + province + ", " + postalCode;
+        return streetAddressNumber + ", "  + street.toLowerCase() + ", " + city.toLowerCase() + ", " + province + ", " + postalCode.toUpperCase();
     }
 }

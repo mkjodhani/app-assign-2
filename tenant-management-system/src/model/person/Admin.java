@@ -1,6 +1,6 @@
 package model.person;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author mkjodhani
@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @since 02/03/23
  */
 public class Admin extends Person{
-    public Admin(String firstName, String lastName, LocalDate dateOfBirth, String mobileNumber) {
+    public Admin(String firstName, String lastName, Date dateOfBirth, String mobileNumber) {
         super(firstName, lastName, dateOfBirth, mobileNumber);
     }
 }
