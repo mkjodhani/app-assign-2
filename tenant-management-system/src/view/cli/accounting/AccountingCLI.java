@@ -41,6 +41,8 @@ public class AccountingCLI{
                 "10. Change Property Status\n" +
                 "11. List of tenant with unpaid rent\n" +
                 "12. List of tenants with rent paid\n" +
+//                terminate lease
+                // add tenant interest
                 "13. Exit";
         return Input.getIntegerInRange(mainMenu,1,10);
     }

@@ -33,7 +33,7 @@ public class AccountingService {
         Tenant tenant = new Tenant(firstName,lastName,dateOfBirth,email);
         data.getTenants().put(tenant.getId(),tenant);
         return tenant;
-    };
+    }
     public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
         data.getProperties().get(propertyType).put(property.getPropertyId(),property);
         return property;
