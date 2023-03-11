@@ -1,4 +1,28 @@
 package controller;
 
-public class tenantController {
+import model.person.Tenant;
+import services.users.TenantService;
+
+import java.util.ArrayList;
+
+public class TenantController {
+    private static TenantService tenantService;
+    private static TenantController tenantController;
+    TenantController(){
+        tenantService = TenantService.getTenantService();
+    }
+
+    public static TenantController getTenantController() {
+        if(tenantController == null){
+            tenantController = new TenantController();
+        }
+        return tenantController;
+    }
+
+    public ArrayList<Tenant> getTenantsByRentPaid(boolean paid){
+        return tenantService.getTenantsByRentPaid(paid);
+    }
+    public boolean payRent(int leaseID){
+        return tenantService.payRent(leaseID);
+    }
 }

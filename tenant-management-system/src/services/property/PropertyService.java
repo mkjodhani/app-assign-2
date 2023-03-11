@@ -11,11 +11,16 @@ import model.property.Property;
  */
 public class PropertyService {
     private MockData data;
-
+    private static PropertyService propertyService;
     public PropertyService() {
         this.data = MockData.getReference();
     }
-
+    public static PropertyService getPropertyService(){
+        if (propertyService == null) {
+            propertyService = new PropertyService();
+        }
+        return propertyService;
+    }
     public Property getPropertyByID(int propertyID){
         for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
             Property property = this.data.getProperties().get(propertyType).get(propertyID);

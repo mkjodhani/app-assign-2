@@ -15,6 +15,13 @@ import java.util.ArrayList;
  */
 public class TenantService {
     private MockData data;
+    private static TenantService tenantService;
+    public static TenantService getTenantService(){
+        if (tenantService == null) {
+            tenantService = new TenantService();
+        }
+        return tenantService;
+    }
     public TenantService() {
         data = MockData.getReference();
     }
@@ -27,7 +34,7 @@ public class TenantService {
             }
         }
         return tenants;
-    };
+    }
 
     public boolean payRent(int leaseID){
         Lease lease = this.data.getLeases().get(leaseID);

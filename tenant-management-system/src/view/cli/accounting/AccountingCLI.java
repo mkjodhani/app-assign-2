@@ -1,5 +1,8 @@
 package view.cli.accounting;
 
+import controller.AccountingController;
+import controller.PropertyController;
+import controller.TenantController;
 import model.person.Tenant;
 import model.property.Lease;
 import model.property.Property;
@@ -19,14 +22,14 @@ import java.util.Date;
  * @since 06/03/23
  */
 public class AccountingCLI{
-    private AccountingService service;
-    private TenantService tenantService;
+    private AccountingController accountingController;
+    private TenantController tenantController;
 
-    private PropertyService propertyService;
+    private PropertyController propertyController;
     public AccountingCLI() {
-        this.service = AccountingService.getAccountingService();
-        this.tenantService = new TenantService();
-        this.propertyService = new PropertyService();
+        this.accountingController = AccountingController.getAccountingController();
+        this.tenantController = TenantController.getTenantController();
+        this.propertyController = PropertyController.getPropertyController();
     }
     public static int getChoiceFromMainMenu() {
         String mainMenu = "1. Add a property\n" +
@@ -54,7 +57,7 @@ public class AccountingCLI{
         lastName = Input.getString("Enter the last name:");
         email = Input.getString("Enter the email:");
         dateOfBirth = Input.getDate("Please provide the date of birth");
-        Tenant tenant = service.addTenant(firstName,lastName,dateOfBirth,email);
+        Tenant tenant = accountingController.addTenant(firstName,lastName,dateOfBirth,email);
         tenant.show();
     }
     private void addProperty(){
@@ -82,7 +85,7 @@ public class AccountingCLI{
             default:
                 return;
         }
-        property = service.addProperty(propertyType,property);
+        property = accountingController.addProperty(propertyType,property);
         property.show();
     }
     private Property.PROPERTY_TYPE getPropertyType(){
@@ -126,13 +129,13 @@ public class AccountingCLI{
         return availabilityType;
     }
     private void showProperties(){
-        Collection<Property> properties = service.getPropertiesByType(getPropertyType());
+        Collection<Property> properties = accountingController.getPropertiesByType(getPropertyType());
         for (Property property :properties){
             property.show();
         }
     }
     private void showTenants(){
-        Collection<Tenant> tenants = service.getTenants();
+        Collection<Tenant> tenants = accountingController.getTenants();
         for (Tenant tenant :tenants){
             tenant.show();
         }
@@ -142,7 +145,7 @@ public class AccountingCLI{
             System.out.println("Type: "+propertyType);
             for (Property.AVAILABILITY_TYPE availabilityType: Property.AVAILABILITY_TYPE.values()){
                 if(availabilityType == Property.AVAILABILITY_TYPE.RENTED){
-                    Collection<Property> houses = service.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
+                    Collection<Property> houses = accountingController.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
                     for (Property house : houses){
                         house.show();
                     }
@@ -155,7 +158,7 @@ public class AccountingCLI{
             System.out.println("Type: "+propertyType);
             for (Property.AVAILABILITY_TYPE availabilityType: Property.AVAILABILITY_TYPE.values()){
                 if(availabilityType != Property.AVAILABILITY_TYPE.RENTED){
-                    Collection<Property> houses = service.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
+                    Collection<Property> houses = accountingController.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
                     for (Property house : houses){
                         house.show();
                     }
@@ -167,7 +170,7 @@ public class AccountingCLI{
     private void rentUnit(){
         int tenantID = Input.getInteger("Enter Tenant ID");
         int propertyID = Input.getInteger("Enter Property ID");
-        int result = service.rentUnit(tenantID,propertyID);
+        int result = accountingController.rentUnit(tenantID,propertyID);
         if (result <= 0){
             System.out.println("Operation performed successfully");
         }
@@ -177,13 +180,13 @@ public class AccountingCLI{
     }
 
     public void showAllLeases(){
-        Collection<Lease> leases = service.getLeases();
+        Collection<Lease> leases = accountingController.getLeases();
         for (Lease lease :leases){
             lease.show();
         }
     }
     public void showTenantsByRentPaymentStatus(boolean paid){
-        Collection<Tenant> tenants = tenantService.getTenantsByRentPaid(paid);
+        Collection<Tenant> tenants = tenantController.getTenantsByRentPaid(paid);
         for (Tenant tenant: tenants){
             tenant.show();
         }
@@ -239,7 +242,7 @@ public class AccountingCLI{
     private void changePropertyStatus() {
         int propertyID = Input.getInteger("Enter Property ID");
         Property.AVAILABILITY_TYPE availabilityType = getAvailabilityType();
-        boolean result = propertyService.updatePropertyStatus(propertyID,availabilityType);
+        boolean result = propertyController.updatePropertyStatus(propertyID,availabilityType);
         if (result){
             System.out.println("Operation performed successfully!!");
         }

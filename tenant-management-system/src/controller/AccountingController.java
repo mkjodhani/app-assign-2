@@ -10,8 +10,16 @@ import java.util.Collection;
 
 public class AccountingController {
     private static AccountingService accountingService;
+    private static AccountingController accountingController;
     AccountingController(){
         accountingService = AccountingService.getAccountingService();
+    }
+    public static AccountingController getAccountingController(){
+        if(accountingController==null){
+            accountingController= new AccountingController();
+        }
+        return accountingController;
+
     }
     public Tenant addTenant(String firstName, String lastName, Date dateOfBirth, String email){
         return accountingService.addTenant(firstName, lastName,  dateOfBirth,  email);
