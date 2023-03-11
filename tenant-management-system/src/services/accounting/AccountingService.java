@@ -1,7 +1,9 @@
 package services.accounting;
 
-import model.accounting.AccountingDTO;
+import model.data.MockData;
+import model.person.Person;
 import model.person.Tenant;
+import model.property.Lease;
 import model.property.Property;
 
 import java.util.ArrayList;
@@ -15,10 +17,10 @@ import java.util.Date;
  * @since 06/03/23
  */
 public class AccountingService {
-    private AccountingDTO accountingDTO;
+    private MockData data;
     private static  AccountingService accountingService;
     private AccountingService() {
-        this.accountingDTO = AccountingDTO.getDTO();
+        this.data = MockData.getReference();
     }
 
     public static AccountingService getAccountingService() {
@@ -29,19 +31,19 @@ public class AccountingService {
     }
     public Tenant addTenant(String firstName, String lastName, Date dateOfBirth, String email){
         Tenant tenant = new Tenant(firstName,lastName,dateOfBirth,email);
-        accountingDTO.addTenant(tenant);
+        data.getTenants().put(tenant.getId(),tenant);
         return tenant;
     };
     public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
-        accountingDTO.addProperty(propertyType,property);
+        data.getProperties().get(propertyType).put(property.getPropertyId(),property);
         return property;
     };
     public Collection<Property> getPropertiesByType(Property.PROPERTY_TYPE propertyType){
-        return accountingDTO.getPropertiesByType(propertyType).values();
+        return data.getProperties().get(propertyType).values();
     }
     public Collection<Property> getPropertiesByStatus(Property.PROPERTY_TYPE propertyType, Property.AVAILABILITY_TYPE availabilityType){
         ArrayList<Property> propertyCollection = new ArrayList<>();
-        for(Property property:accountingDTO.getPropertiesByType(propertyType).values()){
+        for(Property property: data.getProperties().get(propertyType).values()){
             if (property.getPropertyType() == propertyType && property.getStatus() == availabilityType){
                 propertyCollection.add(property);
             }
@@ -49,7 +51,46 @@ public class AccountingService {
         return propertyCollection;
     }
     public Collection<Tenant> getTenants(){
-        return accountingDTO.getTenants().values();
+        return data.getTenants().values();
     }
 
+    public int rentUnit(int tenantID,int propertyID){
+        Property property = null;
+        Tenant tenant = data.getTenants().getOrDefault(tenantID,null);
+        for (Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
+            property = data.getProperties().get(propertyType).getOrDefault(propertyID,null);
+            if (property != null){
+                break;
+            }
+        }
+        if (tenant == null || property == null){
+            return -1;
+        }
+        else if (property.getStatus() == Property.AVAILABILITY_TYPE.RENTED){
+            return -1;
+        }
+        Lease lease = new Lease(tenant,property);
+        data.addLease(lease);
+        property.setStatus(Property.AVAILABILITY_TYPE.RENTED);
+        return lease.getLeaseId();
+    }
+    public Lease getLease(int leaseId){
+        return this.data.getLeases().getOrDefault(leaseId,null);
+    }
+    public Collection<Lease> getLeases(){
+        return this.data.getLeases().values();
+    }
+
+    public boolean subscribeProperty(int tenantID, int propertyID){
+        Property property = null;
+        Tenant tenant = data.getTenants().getOrDefault(tenantID,null);
+        for (Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
+            property = data.getProperties().get(propertyType).getOrDefault(propertyID,null);
+            if (property != null){
+                break;
+            }
+        }
+        property.addObserver(tenant);
+        return true;
+    }
 }

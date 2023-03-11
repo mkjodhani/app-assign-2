@@ -12,33 +12,20 @@ import model.geography.Address;
 public class Condo extends Property{
     private int unitNumber;
 
-    public Condo(Address address, int numberOfBedrooms, int numberOfBathrooms, double squareFootage, int unitNumber) {
-        super(address, numberOfBedrooms, numberOfBathrooms, squareFootage, AVAILABILITY_TYPE.READY_TO_BE_RENOVATED,PROPERTY_TYPE.CONDO);
+    public Condo(Address address, int numberOfBedrooms, int numberOfBathrooms, double squareFootage, int unitNumber, double rent) {
+        super(address, numberOfBedrooms, numberOfBathrooms, squareFootage,PROPERTY_TYPE.CONDO,rent);
         this.unitNumber = unitNumber;
-    }
-
-    @Override
-    public void addListener(InvalidationListener listener) {
-
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-
-    }
-
-    @Override
-    public void update() {
-
     }
 
     public int getUnitNumber() {
         return unitNumber;
     }
+
     @Override
     public String getFullAddress() {
         return String.format("Apt %d, %s",unitNumber,super.getAddress().toString());
     }
+
 
     public Property getClone() throws CloneNotSupportedException {
         return (Property) this.clone();
