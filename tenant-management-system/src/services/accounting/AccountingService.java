@@ -1,7 +1,6 @@
 package services.accounting;
 
 import model.data.MockData;
-import model.person.Person;
 import model.person.Tenant;
 import model.property.Lease;
 import model.property.Property;
@@ -32,6 +31,7 @@ public class AccountingService {
     public Tenant addTenant(String firstName, String lastName, Date dateOfBirth, String email){
         Tenant tenant = new Tenant(firstName,lastName,dateOfBirth,email);
         data.getTenants().put(tenant.getId(),tenant);
+        System.out.println(data.getTenants().get(tenant.getId()));
         return tenant;
     }
     public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
@@ -54,7 +54,7 @@ public class AccountingService {
         return data.getTenants().values();
     }
 
-    public int rentUnit(int tenantID,int propertyID){
+    public int rentUnit(int tenantID,int propertyID,int months){
         Property property = null;
         Tenant tenant = data.getTenants().getOrDefault(tenantID,null);
         for (Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
@@ -69,7 +69,7 @@ public class AccountingService {
         else if (property.getStatus() == Property.AVAILABILITY_TYPE.RENTED){
             return -1;
         }
-        Lease lease = new Lease(tenant,property);
+        Lease lease = new Lease(tenant,property,months);
         data.addLease(lease);
         property.setStatus(Property.AVAILABILITY_TYPE.RENTED);
         return lease.getLeaseId();
@@ -82,13 +82,19 @@ public class AccountingService {
     }
 
     public boolean subscribeProperty(int tenantID, int propertyID){
-        Property property = null;
         Tenant tenant = data.getTenants().getOrDefault(tenantID,null);
+        Property property = null;
+        if(tenant == null){
+            return false;
+        }
         for (Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
             property = data.getProperties().get(propertyType).getOrDefault(propertyID,null);
             if (property != null){
                 break;
             }
+        }
+        if (property == null){
+            return false;
         }
         property.addObserver(tenant);
         return true;

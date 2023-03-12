@@ -1,6 +1,7 @@
 package services.property;
 
 import model.data.MockData;
+import model.property.Lease;
 import model.property.Property;
 
 /**
@@ -37,5 +38,26 @@ public class PropertyService {
         }
         property.setStatus(availabilityType);
         return true;
+    }
+    public boolean terminateLease(int leaseID){
+        Lease lease =this.data.getLeases().getOrDefault(leaseID,null);
+        if (lease == null){
+            return false;
+        }
+        lease.terminateLease();
+        return true;
+    }
+
+    public boolean payRent(int leaseID) {
+        Lease lease =this.data.getLeases().getOrDefault(leaseID,null);
+        if (lease == null){
+            return false;
+        }
+        lease.payRent();
+        return true;
+    }
+
+    public Lease getLeaseById(int leaseID) {
+        return this.data.getLeases().getOrDefault(leaseID,null);
     }
 }

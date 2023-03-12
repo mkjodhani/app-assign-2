@@ -1,6 +1,7 @@
 package controller;
 
 import model.person.Tenant;
+import model.property.Property;
 import services.users.TenantService;
 
 import java.util.ArrayList;
@@ -25,4 +26,8 @@ public class TenantController {
     public boolean payRent(int leaseID){
         return tenantService.payRent(leaseID);
     }
+    public Tenant getTenantByID(int tenantID){
+        return tenantService.getTenantById(tenantID);
+    }
+
 }

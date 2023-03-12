@@ -36,8 +36,8 @@ public class AccountingController {
     public Collection<Tenant> getTenants(){
         return accountingService.getTenants();
     }
-    public int rentUnit(int tenantID,int propertyID){
-        return accountingService.rentUnit(tenantID, propertyID);
+    public int rentUnit(int tenantID,int propertyID,int months){
+        return accountingService.rentUnit(tenantID, propertyID,months);
     }
     public Lease getLease(int leaseId){
         return accountingService.getLease(leaseId);

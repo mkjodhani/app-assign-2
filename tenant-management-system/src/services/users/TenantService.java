@@ -44,4 +44,7 @@ public class TenantService {
         lease.payRent();
         return true;
     }
+    public Tenant getTenantById(int tenantID){
+        return this.data.getTenants().getOrDefault(tenantID,null);
+    }
 }

@@ -6,9 +6,6 @@ import controller.TenantController;
 import model.person.Tenant;
 import model.property.Lease;
 import model.property.Property;
-import services.property.PropertyService;
-import services.accounting.AccountingService;
-import services.users.TenantService;
 import view.cli.helper.Input;
 import view.cli.property.PropertyCLI;
 
@@ -40,14 +37,14 @@ public class AccountingCLI{
                 "6. Display rented units\n" +
                 "7. Display vacant units\n" +
                 "8. Display all leases\n" +
-                "9. Payment details\n" + // TODO
+                "9. Rent Payment\n" + // TODO
                 "10. Change Property Status\n" +
                 "11. List of tenant with unpaid rent\n" +
                 "12. List of tenants with rent paid\n" +
-//                terminate lease
-                // add tenant interest
-                "13. Exit";
-        return Input.getIntegerInRange(mainMenu,1,10);
+                "13. Terminate Lease\n" +
+                "14. Add Tenant Interest\n" +
+                "15. Exit";
+        return Input.getIntegerInRange(mainMenu,1,15);
     }
 
     private void addTenant(){
@@ -170,7 +167,8 @@ public class AccountingCLI{
     private void rentUnit(){
         int tenantID = Input.getInteger("Enter Tenant ID");
         int propertyID = Input.getInteger("Enter Property ID");
-        int result = accountingController.rentUnit(tenantID,propertyID);
+        int months = Input.getInteger("Enter months");
+        int result = accountingController.rentUnit(tenantID,propertyID,months);
         if (result <= 0){
             System.out.println("Operation performed successfully");
         }
@@ -191,8 +189,39 @@ public class AccountingCLI{
             tenant.show();
         }
     }
+    private void payRent() {
+        int leaseID = Input.getInteger("Enter Lease ID");
+        propertyController.payRent(leaseID);
+    }
+    private void subscribeProperty() {
+        int tenantID = Input.getInteger("Enter Tenant ID");
+        int propertyID = Input.getInteger("Enter Property ID");
+        boolean result = accountingController.subscribeProperty(tenantID,propertyID);
+        if (result){
+            System.out.println("Operation performed successfully");
+        }
+        else {
+            System.out.println("Something went wrong!\nPlease try again after some time!");
+        }
+    }
 
+    private void terminateLease() {
+        int leaseID = Input.getInteger("Provide Lease ID:");
+        propertyController.terminateLease(leaseID);
+    }
 
+    private void changePropertyStatus() {
+        int propertyID = Input.getInteger("Enter Property ID");
+        Property.AVAILABILITY_TYPE availabilityType = getAvailabilityType();
+        boolean result = propertyController.updatePropertyStatus(propertyID,availabilityType);
+        if (result){
+            System.out.println("Operation performed successfully!!");
+        }
+        else {
+            System.out.println("Something went wrong!!");
+        }
+
+    }
     public void run(String[] args) {
         int choice = 0;
         while (choice != 11){
@@ -223,6 +252,7 @@ public class AccountingCLI{
                     this.showAllLeases();
                     break;
                 case 9:
+                    this.payRent();
                     break;
                 case 10:
                     this.changePropertyStatus();
@@ -234,21 +264,15 @@ public class AccountingCLI{
                     this.showTenantsByRentPaymentStatus(true);
                     break;
                 case 13:
+                    this.terminateLease();
+                    break;
+                case 14:
+                    this.subscribeProperty();
+                    break;
+                case 15:
                     return;
             }
         }
     }
 
-    private void changePropertyStatus() {
-        int propertyID = Input.getInteger("Enter Property ID");
-        Property.AVAILABILITY_TYPE availabilityType = getAvailabilityType();
-        boolean result = propertyController.updatePropertyStatus(propertyID,availabilityType);
-        if (result){
-            System.out.println("Operation performed successfully!!");
-        }
-        else {
-            System.out.println("Something went wrong!!");
-        }
-
-    }
 }

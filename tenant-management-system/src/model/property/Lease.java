@@ -1,7 +1,5 @@
 package model.property;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import model.data.MockData;
 import model.finanace.Transaction;
 import model.person.Tenant;
@@ -9,9 +7,7 @@ import view.cli.helper.Table;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 
 /**
@@ -25,14 +21,17 @@ public class Lease{
     private static int totalLeases = 0;
     private Tenant tenant;
     private Property property;
-    Date startDate, endDate;
+    private Date startDate, endDate;
+    private boolean active;
 
-    public Lease( Tenant tenant, Property property) {
+
+    public Lease( Tenant tenant, Property property,int months) {
         this.leaseId = ++totalLeases;
+        this.active = true;
         this.tenant = tenant;
         this.property = property;
         this.startDate = new Date();
-        this.endDate = Date.from(LocalDate.now().plusMonths(11).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        this.endDate = Date.from(LocalDate.now().plusMonths(months).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public Lease() {
@@ -40,6 +39,7 @@ public class Lease{
     }
 
     public void terminateLease(){
+        this.active = false;
         property.setStatus(Property.AVAILABILITY_TYPE.READY_TO_BE_RENOVATED);
     }
 
@@ -52,6 +52,9 @@ public class Lease{
     }
 
     public boolean isRentPaidForCurrentMonth(){
+        if (!this.active){
+            return true;
+        }
         Date today = new Date();
         int currentMonth = today.getMonth() + 1, currentYear = today.getYear();
         MockData data = MockData.getReference();
