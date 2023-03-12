@@ -1,14 +1,13 @@
 package test.accounting;
 
+import controller.AccountingController;
+import controller.PropertyController;
+import controller.TenantController;
 import model.geography.Address;
 import model.person.Tenant;
-import model.property.Condo;
-import model.property.Lease;
-import model.property.Property;
+import model.property.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import services.accounting.AccountingService;
-import services.property.PropertyService;
 
 import java.util.Date;
 
@@ -22,67 +21,109 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class AccountingServiceTest {
 
-    public static Tenant tenant;
-    public static Property property;
-    public static AccountingService accountingService;
-    public static PropertyService propertyService;
+    public static int tenantID,propertyID;
+    public static AccountingController accountingController;
+    public static PropertyController propertyController;
+    public static TenantController tenantController;
     public static int leaseId;
 
     @BeforeClass
     public static void initClass(){
-        accountingService = AccountingService.getAccountingService();
-        propertyService = new PropertyService();
+        accountingController = AccountingController.getAccountingController();
+        propertyController =  PropertyController.getPropertyController();
+        tenantController = TenantController.getTenantController();
+
+        // ADD TENANT
         Date dateOfBirth = new Date();
-        tenant = accountingService.addTenant("Mayur","Jodhani",dateOfBirth,"mkjodhani133@gmail.com");
-        Address address = Address.generateAddress("Rue Bouchette","Montreal","Quebec","H3W 1C5",4795);
-        Property property1 = new Condo(address,2,1,1200,26,1200);
-        property = accountingService.addProperty(Property.PROPERTY_TYPE.CONDO,property1);
-    }
-    @Test
-    public void addTenant() {
-        accountingService = AccountingService.getAccountingService();
-        Date dateOfBirth = new Date();
-        Tenant addedTenant = accountingService.addTenant("Mayur","Jodhani",dateOfBirth,"mkjodhani133@gmail.com");
-        assertEquals(addedTenant.getId(),2);
+        Tenant addedTenant = accountingController.addTenant("Mayur","Jodhani",dateOfBirth,"mkjodhani133@gmail.com");
         assertEquals(addedTenant.getEmail(),"mkjodhani133@gmail.com");
         assertEquals(addedTenant.getDateOfBirth(),dateOfBirth);
         assertEquals(addedTenant.getFirstName(),"Mayur");
         assertEquals(addedTenant.getLastName(),"Jodhani");
         assertEquals(addedTenant.getClass().getName(),Tenant.class.getName());
-        this.tenant = addedTenant;
+        addedTenant.show();
+        tenantID = addedTenant.getId();
+
+
+        Address address = Address.generateAddress("Saint Marc","Montreal","Quebec","H3W 2N9",2000);
+        Property house = new House(address,2,1,1200,1425);
+        House addedProperty = (House) accountingController.addProperty(Property.PROPERTY_TYPE.CONDO,house);
+        assertEquals(addedProperty.getAddress(),address);
+        assertEquals(addedProperty.getSquareFootage(),1200);
+        assertEquals(addedProperty.getNumberOfBedrooms(),2);
+        assertEquals(addedProperty.getNumberOfBathrooms(),1);
+        propertyID = addedProperty.getPropertyId();
+    }
+    @Test
+    public void addTenant() {
+        Date dateOfBirth = new Date();
+        Tenant addedTenant = accountingController.addTenant("Mayur","Jodhani",dateOfBirth,"mkjodhani133@gmail.com");
+        assertEquals(addedTenant.getEmail(),"mkjodhani133@gmail.com");
+        assertEquals(addedTenant.getDateOfBirth(),dateOfBirth);
+        assertEquals(addedTenant.getFirstName(),"Mayur");
+        assertEquals(addedTenant.getLastName(),"Jodhani");
+        assertEquals(addedTenant.getClass().getName(),Tenant.class.getName());
         addedTenant.show();
     }
     @Test
-    public void addProperty() throws CloneNotSupportedException {
-        accountingService = AccountingService.getAccountingService();
+    public void addHouse() {
+        Address address = Address.generateAddress("Saint Marc","Montreal","Quebec","H3W 2N9",2000);
+        Property house = new House(address,2,1,1200,1425);
+        House addedProperty = (House) accountingController.addProperty(Property.PROPERTY_TYPE.CONDO,house);
+        assertEquals(addedProperty.getAddress(),address);
+        assertEquals(addedProperty.getSquareFootage(),1200);
+        assertEquals(addedProperty.getNumberOfBedrooms(),2);
+        assertEquals(addedProperty.getNumberOfBathrooms(),1);
+    }
+    @Test
+    public void addApartment() {
+        Address address = Address.generateAddress("Cote vertu","Montreal","Quebec","H3W 2N9",2000);
+        Property apartment = new Apartment(address,2,1,1200,1905,1425);
+        Apartment addedProperty = (Apartment) accountingController.addProperty(Property.PROPERTY_TYPE.CONDO,apartment);
+        assertEquals(addedProperty.getAddress(),address);
+        assertEquals(addedProperty.getSquareFootage(),1200);
+        assertEquals(addedProperty.getNumberOfBedrooms(),2);
+        assertEquals(addedProperty.getNumberOfBathrooms(),1);
+        assertEquals(addedProperty.getAptNumber(),1905);
+    }
+    @Test
+    public void addCondo() {
         Address address = Address.generateAddress("Rue Bouchette","Montreal","Quebec","H3W 1C5",4795);
-        Property property = new Condo(address,2,1,1200,26,1200);
-        Condo addedProperty = (Condo)accountingService.addProperty(Property.PROPERTY_TYPE.CONDO,property);
-        assertEquals(addedProperty.getPropertyId(),2,"Property ID not matched");
+        Property condo = new Condo(address,2,1,1200,26,1200);
+        Condo addedProperty = (Condo)accountingController.addProperty(Property.PROPERTY_TYPE.CONDO,condo);
         assertEquals(addedProperty.getAddress(),address);
         assertEquals(addedProperty.getSquareFootage(),1200);
         assertEquals(addedProperty.getNumberOfBedrooms(),2);
         assertEquals(addedProperty.getNumberOfBathrooms(),1);
         assertEquals(addedProperty.getUnitNumber(),26);
-        assertEquals(accountingService.getPropertiesByType(Property.PROPERTY_TYPE.CONDO).size(),2);
-        property.show();
-        this.property = property;
     }
     @Test
     public void rentUnit(){
-        leaseId = accountingService.rentUnit(tenant.getId(),property.getPropertyId());
+        Property property = propertyController.getPropertyByID(propertyID);
+        Tenant tenant = tenantController.getTenantByID(propertyID);
+        leaseId = accountingController.rentUnit(tenant.getId(),property.getPropertyId(),11);
         tenant.show();
         property.show();
         assertTrue(leaseId>=0);
-        Lease lease = accountingService.getLease(leaseId);
+        Lease lease = accountingController.getLease(leaseId);
         lease.showInDetails();
     }
     @Test
     public void subscribeProperty(){
-        accountingService.subscribeProperty(tenant.getId(),property.getPropertyId());
+        Property property = propertyController.getPropertyByID(1);
+        Tenant tenant = tenantController.getTenantByID(1);
+        accountingController.subscribeProperty(tenant.getId(),property.getPropertyId());
         assertEquals(tenant.getInterestedProperties().size(),0);
-//        property.terminateLease();
-        propertyService.updatePropertyStatus(property.getPropertyId(), Property.AVAILABILITY_TYPE.READY_TO_BE_RENTED);
+        propertyController.updatePropertyStatus(property.getPropertyId(), Property.AVAILABILITY_TYPE.READY_TO_BE_RENTED);
+        assertEquals(tenant.getInterestedProperties().size(),1);
+    }
+    @Test
+    public void terminateLease(){
+        Property property = propertyController.getPropertyByID(propertyID);
+        Tenant tenant = tenantController.getTenantByID(propertyID);
+        accountingController.subscribeProperty(tenant.getId(),property.getPropertyId());
+        assertEquals(tenant.getInterestedProperties().size(),0);
+        property.terminateLease();
         assertEquals(tenant.getInterestedProperties().size(),1);
     }
 }

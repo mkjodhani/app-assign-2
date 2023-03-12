@@ -1,11 +1,11 @@
 package view.cli.accounting;
 
+import controller.AccountingController;
+import controller.PropertyController;
+import controller.TenantController;
 import model.person.Tenant;
 import model.property.Lease;
 import model.property.Property;
-import services.property.PropertyService;
-import services.accounting.AccountingService;
-import services.users.TenantService;
 import view.cli.helper.Input;
 import view.cli.property.PropertyCLI;
 
@@ -19,14 +19,14 @@ import java.util.Date;
  * @since 06/03/23
  */
 public class AccountingCLI{
-    private AccountingService service;
-    private TenantService tenantService;
+    private AccountingController accountingController;
+    private TenantController tenantController;
 
-    private PropertyService propertyService;
+    private PropertyController propertyController;
     public AccountingCLI() {
-        this.service = AccountingService.getAccountingService();
-        this.tenantService = new TenantService();
-        this.propertyService = new PropertyService();
+        this.accountingController = AccountingController.getAccountingController();
+        this.tenantController = TenantController.getTenantController();
+        this.propertyController = PropertyController.getPropertyController();
     }
     public static int getChoiceFromMainMenu() {
         String mainMenu = "1. Add a property\n" +
@@ -37,12 +37,14 @@ public class AccountingCLI{
                 "6. Display rented units\n" +
                 "7. Display vacant units\n" +
                 "8. Display all leases\n" +
-                "9. Payment details\n" + // TODO
+                "9. Rent Payment\n" + // TODO
                 "10. Change Property Status\n" +
                 "11. List of tenant with unpaid rent\n" +
                 "12. List of tenants with rent paid\n" +
-                "13. Exit";
-        return Input.getIntegerInRange(mainMenu,1,10);
+                "13. Terminate Lease\n" +
+                "14. Add Tenant Interest\n" +
+                "15. Exit";
+        return Input.getIntegerInRange(mainMenu,1,15);
     }
 
     private void addTenant(){
@@ -52,7 +54,7 @@ public class AccountingCLI{
         lastName = Input.getString("Enter the last name:");
         email = Input.getString("Enter the email:");
         dateOfBirth = Input.getDate("Please provide the date of birth");
-        Tenant tenant = service.addTenant(firstName,lastName,dateOfBirth,email);
+        Tenant tenant = accountingController.addTenant(firstName,lastName,dateOfBirth,email);
         tenant.show();
     }
     private void addProperty(){
@@ -80,7 +82,7 @@ public class AccountingCLI{
             default:
                 return;
         }
-        property = service.addProperty(propertyType,property);
+        property = accountingController.addProperty(propertyType,property);
         property.show();
     }
     private Property.PROPERTY_TYPE getPropertyType(){
@@ -124,13 +126,13 @@ public class AccountingCLI{
         return availabilityType;
     }
     private void showProperties(){
-        Collection<Property> properties = service.getPropertiesByType(getPropertyType());
+        Collection<Property> properties = accountingController.getPropertiesByType(getPropertyType());
         for (Property property :properties){
             property.show();
         }
     }
     private void showTenants(){
-        Collection<Tenant> tenants = service.getTenants();
+        Collection<Tenant> tenants = accountingController.getTenants();
         for (Tenant tenant :tenants){
             tenant.show();
         }
@@ -140,7 +142,7 @@ public class AccountingCLI{
             System.out.println("Type: "+propertyType);
             for (Property.AVAILABILITY_TYPE availabilityType: Property.AVAILABILITY_TYPE.values()){
                 if(availabilityType == Property.AVAILABILITY_TYPE.RENTED){
-                    Collection<Property> houses = service.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
+                    Collection<Property> houses = accountingController.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
                     for (Property house : houses){
                         house.show();
                     }
@@ -153,7 +155,7 @@ public class AccountingCLI{
             System.out.println("Type: "+propertyType);
             for (Property.AVAILABILITY_TYPE availabilityType: Property.AVAILABILITY_TYPE.values()){
                 if(availabilityType != Property.AVAILABILITY_TYPE.RENTED){
-                    Collection<Property> houses = service.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
+                    Collection<Property> houses = accountingController.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
                     for (Property house : houses){
                         house.show();
                     }
@@ -165,7 +167,8 @@ public class AccountingCLI{
     private void rentUnit(){
         int tenantID = Input.getInteger("Enter Tenant ID");
         int propertyID = Input.getInteger("Enter Property ID");
-        int result = service.rentUnit(tenantID,propertyID);
+        int months = Input.getInteger("Enter months");
+        int result = accountingController.rentUnit(tenantID,propertyID,months);
         if (result <= 0){
             System.out.println("Operation performed successfully");
         }
@@ -175,19 +178,50 @@ public class AccountingCLI{
     }
 
     public void showAllLeases(){
-        Collection<Lease> leases = service.getLeases();
+        Collection<Lease> leases = accountingController.getLeases();
         for (Lease lease :leases){
             lease.show();
         }
     }
     public void showTenantsByRentPaymentStatus(boolean paid){
-        Collection<Tenant> tenants = tenantService.getTenantsByRentPaid(paid);
+        Collection<Tenant> tenants = tenantController.getTenantsByRentPaid(paid);
         for (Tenant tenant: tenants){
             tenant.show();
         }
     }
+    private void payRent() {
+        int leaseID = Input.getInteger("Enter Lease ID");
+        propertyController.payRent(leaseID);
+    }
+    private void subscribeProperty() {
+        int tenantID = Input.getInteger("Enter Tenant ID");
+        int propertyID = Input.getInteger("Enter Property ID");
+        boolean result = accountingController.subscribeProperty(tenantID,propertyID);
+        if (result){
+            System.out.println("Operation performed successfully");
+        }
+        else {
+            System.out.println("Something went wrong!\nPlease try again after some time!");
+        }
+    }
 
+    private void terminateLease() {
+        int leaseID = Input.getInteger("Provide Lease ID:");
+        propertyController.terminateLease(leaseID);
+    }
 
+    private void changePropertyStatus() {
+        int propertyID = Input.getInteger("Enter Property ID");
+        Property.AVAILABILITY_TYPE availabilityType = getAvailabilityType();
+        boolean result = propertyController.updatePropertyStatus(propertyID,availabilityType);
+        if (result){
+            System.out.println("Operation performed successfully!!");
+        }
+        else {
+            System.out.println("Something went wrong!!");
+        }
+
+    }
     public void run(String[] args) {
         int choice = 0;
         while (choice != 11){
@@ -218,6 +252,7 @@ public class AccountingCLI{
                     this.showAllLeases();
                     break;
                 case 9:
+                    this.payRent();
                     break;
                 case 10:
                     this.changePropertyStatus();
@@ -229,21 +264,15 @@ public class AccountingCLI{
                     this.showTenantsByRentPaymentStatus(true);
                     break;
                 case 13:
+                    this.terminateLease();
+                    break;
+                case 14:
+                    this.subscribeProperty();
+                    break;
+                case 15:
                     return;
             }
         }
     }
 
-    private void changePropertyStatus() {
-        int propertyID = Input.getInteger("Enter Property ID");
-        Property.AVAILABILITY_TYPE availabilityType = getAvailabilityType();
-        boolean result = propertyService.updatePropertyStatus(propertyID,availabilityType);
-        if (result){
-            System.out.println("Operation performed successfully!!");
-        }
-        else {
-            System.out.println("Something went wrong!!");
-        }
-
-    }
 }

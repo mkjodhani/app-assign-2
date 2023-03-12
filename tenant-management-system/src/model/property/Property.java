@@ -1,6 +1,5 @@
 package model.property;
 
-import javafx.beans.InvalidationListener;
 import model.geography.Address;
 import view.cli.helper.Table;
 

@@ -64,19 +64,6 @@
     </key>
   </component>
   <component name="RunManager" selected="JUnit.TestSuite">
-    <configuration name="TestRunner" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="test.TestRunner" />
-      <module name="tenant-management-system" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="test.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="AccountingServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tenant-management-system" />
       <extension name="coverage">
@@ -92,7 +79,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AccountingServiceTest.rentUnit" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AccountingServiceTest.addTenant" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tenant-management-system" />
       <extension name="coverage">
         <pattern>
@@ -102,23 +89,38 @@
       </extension>
       <option name="PACKAGE_NAME" value="test.accounting" />
       <option name="MAIN_CLASS_NAME" value="test.accounting.AccountingServiceTest" />
-      <option name="METHOD_NAME" value="rentUnit" />
+      <option name="METHOD_NAME" value="addTenant" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AccountingServiceTest.subscribeProperty" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="TenantServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="tenant-management-system" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="test.accounting.*" />
+          <option name="PATTERN" value="test.users.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="test.accounting" />
-      <option name="MAIN_CLASS_NAME" value="test.accounting.AccountingServiceTest" />
-      <option name="METHOD_NAME" value="subscribeProperty" />
+      <option name="PACKAGE_NAME" value="test.users" />
+      <option name="MAIN_CLASS_NAME" value="test.users.TenantServiceTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TenantServiceTest.getTenantsByRentPaid" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="tenant-management-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="test.users.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="test.users" />
+      <option name="MAIN_CLASS_NAME" value="test.users.TenantServiceTest" />
+      <option name="METHOD_NAME" value="getTenantsByRentPaid" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -142,10 +144,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.TestSuite" />
+        <item itemvalue="JUnit.TenantServiceTest.getTenantsByRentPaid" />
+        <item itemvalue="JUnit.TenantServiceTest" />
         <item itemvalue="JUnit.AccountingServiceTest" />
-        <item itemvalue="JUnit.AccountingServiceTest.rentUnit" />
-        <item itemvalue="JUnit.AccountingServiceTest.subscribeProperty" />
-        <item itemvalue="Application.TestRunner" />
+        <item itemvalue="JUnit.AccountingServiceTest.addTenant" />
       </list>
     </recent_temporary>
   </component>
@@ -172,6 +174,7 @@
       <workItem from="1678316807166" duration="382000" />
       <workItem from="1678419679347" duration="7542000" />
       <workItem from="1678470740376" duration="12198000" />
+      <workItem from="1678574492621" duration="7294000" />
     </task>
     <servers />
   </component>

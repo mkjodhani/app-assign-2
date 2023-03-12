@@ -66,6 +66,7 @@ public abstract class Person implements Observer {
     public void show() {
         Table table = new Table();
         table.addRow("Person","", Table.POSITION.LEFT);
+        table.addRow("Tenant ID", String.valueOf(id), Table.POSITION.LEFT);
         table.addRow("First Name", firstName, Table.POSITION.LEFT);
         table.addRow("Last Name",lastName, Table.POSITION.LEFT);
         table.addRow("Date Of Birth",dateOfBirth.toString(), Table.POSITION.LEFT);
