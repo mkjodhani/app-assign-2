@@ -1,5 +1,6 @@
 package view.cli.helper;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,10 +15,10 @@ public class Table {
         LEFT,
         RIGHT
     }
-    private HashMap<String,String[]> rows;
+    private ArrayList<String[]> rows;
 
     public Table() {
-        rows = new HashMap<>();
+        rows = new ArrayList<>();
     }
 
     public void show(){
@@ -25,25 +26,21 @@ public class Table {
         for (int i=0;i<padding;i++){
             horizontalLine += "-";
         }
-        String[] keys = rows.keySet().toArray(new String[0]);
         System.out.println(horizontalLine);
-        for(int i=keys.length -1;i>=0;i--){
-            String key = keys[i];
-            String[] values = rows.get(key);
-            if(values[0].equals(String.valueOf(POSITION.LEFT))){
-                System.out.print(String.format("|%-"+(padding-2)/2+"s|%"+(padding-2)/2+"s|\n",key,values[1]));
+        for(int i=0;i<=rows.size() -1;i++){
+            String[] row = rows.get(i);
+            String key = row[0], value = row[1], position = row[2];
+            if(position.equals(String.valueOf(POSITION.LEFT))){
+                System.out.print(String.format("|%-"+(padding-2)/2+"s|%"+(padding-2)/2+"s|\n",key,value));
             }
             else{
-                System.out.print(String.format("|%"+(padding-2)+"s|\n",values[1]));
+                System.out.print(String.format("|%"+(padding-2)+"s|\n",value));
             }
         }
         System.out.println(horizontalLine);
 
     }
     public void addRow(String key,String val,POSITION position){
-        rows.put(key,new String[]{String.valueOf(position),val});
-    }
-    public void removeRow(String key){
-        rows.remove(key);
+        rows.add(new String[]{key,val,String.valueOf(position)});
     }
 }

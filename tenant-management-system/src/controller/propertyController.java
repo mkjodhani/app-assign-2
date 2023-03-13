@@ -3,15 +3,18 @@ package controller;
 import model.property.Lease;
 import services.property.PropertyService;
 import model.property.Property;
+
+import java.util.Collection;
+
 public class PropertyController {
-    private static PropertyService propertyService;
+    private PropertyService propertyService;
     private static PropertyController propertyController;
-    PropertyController(){
-        propertyService = PropertyService.getPropertyService();
+    private PropertyController(){
+        this.propertyService = PropertyService.getPropertyService();
     }
     public static PropertyController getPropertyController(){
-        if(propertyController== null){
-            propertyController= new PropertyController();
+        if(propertyController == null){
+            propertyController = new PropertyController();
         }
         return propertyController;
     }
@@ -30,5 +33,12 @@ public class PropertyController {
 
     public boolean payRent(int leaseID) {
         return propertyService.payRent(leaseID);
+    }
+
+    public Collection<Property> getPropertiesByStatus(Property.PROPERTY_TYPE propertyType, Property.AVAILABILITY_TYPE availabilityType) {
+        return propertyService.getPropertiesByStatus(propertyType,availabilityType);
+    }
+    public Collection<Property> getProperties() {
+        return propertyService.getAll();
     }
 }

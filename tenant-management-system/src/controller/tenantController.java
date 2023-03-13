@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class TenantController {
     private static TenantService tenantService;
     private static TenantController tenantController;
-    TenantController(){
+    private TenantController(){
         tenantService = TenantService.getTenantService();
     }
 

@@ -1,6 +1,7 @@
 package model.data;
 
 import model.finanace.Transaction;
+import model.notificaiton.Message;
 import model.person.Tenant;
 import model.property.Lease;
 import model.property.Property;
@@ -20,12 +21,14 @@ public class MockData {
     private HashMap<Integer, Tenant> tenants;
     private HashMap<Property.PROPERTY_TYPE,HashMap<Integer, Property>> properties;
     private HashMap<Integer, Transaction> transactions;
+    private HashMap<Integer, Message> messages;
 
     private MockData() {
         leases = new HashMap<>();
         tenants = new HashMap<>();
         properties = new HashMap<>();
         transactions = new HashMap<>();
+        messages = new HashMap<>();
         properties.put(Property.PROPERTY_TYPE.APARTMENT,new HashMap<>());
         properties.put(Property.PROPERTY_TYPE.CONDO,new HashMap<>());
         properties.put(Property.PROPERTY_TYPE.HOUSE,new HashMap<>());
@@ -54,5 +57,9 @@ public class MockData {
 
     public HashMap<Integer, Lease> getLeases() {
         return leases;
+    }
+
+    public HashMap<Integer, Message> getMessages() {
+        return messages;
     }
 }

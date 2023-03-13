@@ -31,7 +31,6 @@ public class AccountingService {
     public Tenant addTenant(String firstName, String lastName, Date dateOfBirth, String email){
         Tenant tenant = new Tenant(firstName,lastName,dateOfBirth,email);
         data.getTenants().put(tenant.getId(),tenant);
-        System.out.println(data.getTenants().get(tenant.getId()));
         return tenant;
     }
     public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
@@ -41,15 +40,7 @@ public class AccountingService {
     public Collection<Property> getPropertiesByType(Property.PROPERTY_TYPE propertyType){
         return data.getProperties().get(propertyType).values();
     }
-    public Collection<Property> getPropertiesByStatus(Property.PROPERTY_TYPE propertyType, Property.AVAILABILITY_TYPE availabilityType){
-        ArrayList<Property> propertyCollection = new ArrayList<>();
-        for(Property property: data.getProperties().get(propertyType).values()){
-            if (property.getPropertyType() == propertyType && property.getStatus() == availabilityType){
-                propertyCollection.add(property);
-            }
-        }
-        return propertyCollection;
-    }
+
     public Collection<Tenant> getTenants(){
         return data.getTenants().values();
     }
