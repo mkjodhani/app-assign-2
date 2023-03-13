@@ -1,5 +1,8 @@
 package model.notificaiton;
 
+import javafx.scene.control.Tab;
+import view.cli.helper.Table;
+
 import java.util.Date;
 
 /**
@@ -10,18 +13,19 @@ import java.util.Date;
  */
 public class Message {
     private Date timeStamp;
+    private int userID;
     private String message;
 
-    public Message(Date timeStamp, String message) {
-        this.timeStamp = timeStamp;
+    public Message(int userID, String message) {
+        this.timeStamp = new Date();
+        this.userID = userID;
         this.message = message;
     }
 
-    public Date getTimeStamp() {
-        return timeStamp;
-    }
-
-    public String getMessage() {
-        return message;
+    public void show() {
+        Table table = new Table();
+        table.addRow(message,"", Table.POSITION.LEFT);
+        table.addRow("",timeStamp.toLocaleString(), Table.POSITION.LEFT);
+        table.show();
     }
 }

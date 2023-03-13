@@ -3,6 +3,7 @@ package test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import test.accounting.AccountingServiceTest;
+import test.properties.PropertyTest;
 import test.users.TenantServiceTest;;
 
 /**
@@ -13,7 +14,8 @@ import test.users.TenantServiceTest;;
  */
 @Suite.SuiteClasses({
         AccountingServiceTest.class,
-        TenantServiceTest.class
+        PropertyTest.class,
+        TenantServiceTest.class,
 })
 @RunWith(Suite.class)
 public class TestSuite {

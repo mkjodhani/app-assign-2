@@ -34,10 +34,6 @@ public class Lease{
         this.endDate = Date.from(LocalDate.now().plusMonths(months).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public Lease() {
-        leaseId = ++totalLeases;
-    }
-
     public void terminateLease(){
         this.active = false;
         property.setStatus(Property.AVAILABILITY_TYPE.READY_TO_BE_RENOVATED);
@@ -81,8 +77,11 @@ public class Lease{
         System.out.println("LEASE");
         Table table = new Table();
         table.addRow("Lease ID",String.valueOf(leaseId), Table.POSITION.LEFT);
+        table.addRow("Property ID", String.valueOf(property.getPropertyId()), Table.POSITION.LEFT);
+        table.addRow("Tenant ID", String.valueOf(tenant.getId()), Table.POSITION.LEFT);
         table.addRow("Start Date", startDate.toLocaleString(), Table.POSITION.LEFT);
         table.addRow("End Date",endDate.toLocaleString(), Table.POSITION.LEFT);
+        table.addRow("Active",String.valueOf(active), Table.POSITION.LEFT);
         table.show();
     }
 

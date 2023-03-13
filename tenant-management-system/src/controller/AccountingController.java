@@ -9,14 +9,14 @@ import java.util.Date;
 import java.util.Collection;
 
 public class AccountingController {
-    private static AccountingService accountingService;
+    private AccountingService accountingService;
     private static AccountingController accountingController;
-    AccountingController(){
+    private AccountingController(){
         accountingService = AccountingService.getAccountingService();
     }
     public static AccountingController getAccountingController(){
-        if(accountingController==null){
-            accountingController= new AccountingController();
+        if(accountingController == null){
+            accountingController = new AccountingController();
         }
         return accountingController;
 
@@ -29,9 +29,6 @@ public class AccountingController {
     }
     public Collection<Property> getPropertiesByType(Property.PROPERTY_TYPE propertyType){
         return accountingService.getPropertiesByType(propertyType);
-    }
-    public Collection<Property> getPropertiesByStatus(Property.PROPERTY_TYPE propertyType, Property.AVAILABILITY_TYPE availabilityType){
-        return accountingService.getPropertiesByStatus(propertyType,availabilityType);
     }
     public Collection<Tenant> getTenants(){
         return accountingService.getTenants();

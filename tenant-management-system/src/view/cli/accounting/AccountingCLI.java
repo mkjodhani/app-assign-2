@@ -21,7 +21,6 @@ import java.util.Date;
 public class AccountingCLI{
     private AccountingController accountingController;
     private TenantController tenantController;
-
     private PropertyController propertyController;
     public AccountingCLI() {
         this.accountingController = AccountingController.getAccountingController();
@@ -43,7 +42,8 @@ public class AccountingCLI{
                 "12. List of tenants with rent paid\n" +
                 "13. Terminate Lease\n" +
                 "14. Add Tenant Interest\n" +
-                "15. Exit";
+                "15. Show notifications\n" +
+                "16. Exit";
         return Input.getIntegerInRange(mainMenu,1,15);
     }
 
@@ -53,7 +53,7 @@ public class AccountingCLI{
         firstName = Input.getString("Enter the first name:");
         lastName = Input.getString("Enter the last name:");
         email = Input.getString("Enter the email:");
-        dateOfBirth = Input.getDate("Please provide the date of birth");
+        dateOfBirth = Input.getDate("Please provide the date of birth(yyyy-MM-dd)");
         Tenant tenant = accountingController.addTenant(firstName,lastName,dateOfBirth,email);
         tenant.show();
     }
@@ -127,40 +127,51 @@ public class AccountingCLI{
     }
     private void showProperties(){
         Collection<Property> properties = accountingController.getPropertiesByType(getPropertyType());
-        for (Property property :properties){
-            property.show();
+        if(properties.size() == 0){
+            System.out.println("No property found!");
+        }
+        else{
+            for (Property property :properties){
+                property.show();
+            }
         }
     }
     private void showTenants(){
         Collection<Tenant> tenants = accountingController.getTenants();
-        for (Tenant tenant :tenants){
-            tenant.show();
+        if(tenants.size() == 0){
+            System.out.println("No tenants found!");
+        }
+        else{
+            for (Tenant tenant :tenants){
+                tenant.show();
+            }
         }
     }
     private void showRentedUnits(){
         for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
             System.out.println("Type: "+propertyType);
-            for (Property.AVAILABILITY_TYPE availabilityType: Property.AVAILABILITY_TYPE.values()){
-                if(availabilityType == Property.AVAILABILITY_TYPE.RENTED){
-                    Collection<Property> houses = accountingController.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
-                    for (Property house : houses){
-                        house.show();
-                    }
+            Collection<Property> properties = propertyController.getPropertiesByStatus(propertyType, Property.AVAILABILITY_TYPE.RENTED);
+            if(properties.size() == 0){
+                System.out.println(String.format("No property found for %s type!",propertyType));
+            }
+            else{
+                for (Property house : properties){
+                    house.show();
                 }
             }
         }
     }
     private void showNotRentedUnits(){
-        for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
-            System.out.println("Type: "+propertyType);
-            for (Property.AVAILABILITY_TYPE availabilityType: Property.AVAILABILITY_TYPE.values()){
-                if(availabilityType != Property.AVAILABILITY_TYPE.RENTED){
-                    Collection<Property> houses = accountingController.getPropertiesByStatus(Property.PROPERTY_TYPE.HOUSE, Property.AVAILABILITY_TYPE.RENTED);
-                    for (Property house : houses){
-                        house.show();
-                    }
-                }
+        Collection<Property> properties = propertyController.getProperties();
+        int count = 0;
+        for (Property property: properties){
+            if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED){
+                property.show();
+                count++;
             }
+        }
+        if (count == 0){
+            System.out.println("No property found!");
         }
     }
 
@@ -170,28 +181,44 @@ public class AccountingCLI{
         int months = Input.getInteger("Enter months");
         int result = accountingController.rentUnit(tenantID,propertyID,months);
         if (result <= 0){
-            System.out.println("Operation performed successfully");
+            System.out.println("Something went wrong!\nPlease try again after some time!");
         }
         else {
-            System.out.println("Something went wrong!\nPlease try again after some time!");
+            System.out.println("Operation performed successfully");
         }
     }
 
     public void showAllLeases(){
         Collection<Lease> leases = accountingController.getLeases();
-        for (Lease lease :leases){
-            lease.show();
+        if(leases.size() == 0){
+            System.out.println("No lease found!");
+        }
+        else{
+            for (Lease lease :leases){
+                lease.show();
+            }
         }
     }
     public void showTenantsByRentPaymentStatus(boolean paid){
         Collection<Tenant> tenants = tenantController.getTenantsByRentPaid(paid);
-        for (Tenant tenant: tenants){
-            tenant.show();
+        if (tenants.size() == 0){
+            System.out.println("No tenants found for this option!!");
+        }
+        else{
+            for (Tenant tenant: tenants){
+                tenant.show();
+            }
         }
     }
     private void payRent() {
         int leaseID = Input.getInteger("Enter Lease ID");
-        propertyController.payRent(leaseID);
+        boolean result = propertyController.payRent(leaseID);
+        if(result){
+            System.out.println("Operation performed successfully!!");
+        }
+        else{
+            System.out.println("Something went wrong!!\nPlease provide valid information.");
+        }
     }
     private void subscribeProperty() {
         int tenantID = Input.getInteger("Enter Tenant ID");
@@ -207,7 +234,13 @@ public class AccountingCLI{
 
     private void terminateLease() {
         int leaseID = Input.getInteger("Provide Lease ID:");
-        propertyController.terminateLease(leaseID);
+        boolean result = propertyController.terminateLease(leaseID);
+        if (result){
+            System.out.println("Operation performed successfully!!");
+        }
+        else {
+            System.out.println("Something went wrong!!");
+        }
     }
 
     private void changePropertyStatus() {
@@ -224,7 +257,7 @@ public class AccountingCLI{
     }
     public void run(String[] args) {
         int choice = 0;
-        while (choice != 11){
+        while (choice != 16){
             choice = getChoiceFromMainMenu();
             switch (choice){
                 case 1:
@@ -270,9 +303,22 @@ public class AccountingCLI{
                     this.subscribeProperty();
                     break;
                 case 15:
+                    this.showNotifications();
+                    break;
+                case 16:
                     return;
             }
         }
     }
 
+    private void showNotifications() {
+        int tenantId = Input.getInteger("Provide tenant ID:");
+        Tenant tenant = tenantController.getTenantByID(tenantId);
+        if(tenant == null){
+            System.out.println("No tenant available for given ID.");
+        }
+        else{
+            tenant.showMessages();
+        }
+    }
 }

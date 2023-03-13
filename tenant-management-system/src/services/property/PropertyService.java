@@ -4,6 +4,9 @@ import model.data.MockData;
 import model.property.Lease;
 import model.property.Property;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * @author mkjodhani
  * @version 1.0
@@ -59,5 +62,24 @@ public class PropertyService {
 
     public Lease getLeaseById(int leaseID) {
         return this.data.getLeases().getOrDefault(leaseID,null);
+    }
+    public Collection<Property> getPropertiesByStatus(Property.PROPERTY_TYPE propertyType, Property.AVAILABILITY_TYPE availabilityType){
+        ArrayList<Property> propertyCollection = new ArrayList<>();
+        for(Property property: data.getProperties().get(propertyType).values()){
+            if (property.getStatus() == availabilityType){
+                propertyCollection.add(property);
+            }
+        }
+        return propertyCollection;
+    }
+
+    public Collection<Property> getAll() {
+        ArrayList<Property> propertyCollection = new ArrayList<>();
+        for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
+            for(Property property: data.getProperties().get(propertyType).values()){
+                propertyCollection.add(property);
+            }
+        }
+        return propertyCollection;
     }
 }
