@@ -23,7 +23,9 @@ public class Tenant extends Person implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         Property property = (Property) arg;
-        Message message = new Message(this.id,String.format("Property #%d is now %s",property.getPropertyId(),property.getStatus()));
+        String messageString = String.format("Property #%d is now %s",property.getPropertyId(),property.getStatus());
+        Message message = new Message(this.id,messageString);
+        System.out.println("Notification received by Tenant #"+this.id+" :: "+messageString);
         messages.push(message);
         if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED ){
             interestedProperties.put(property.getPropertyId(),property);
