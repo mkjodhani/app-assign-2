@@ -41,8 +41,8 @@ public abstract class Property extends Observable{
         this.rent = rent;
     }
 
-    public Address getAddress() {
-        return address;
+    public String getAddress() {
+        return address.toString();
     }
 
     public int getNumberOfBedrooms() {
@@ -97,4 +97,9 @@ public abstract class Property extends Observable{
     public void terminateLease(){
         setStatus(AVAILABILITY_TYPE.READY_TO_BE_RENOVATED);
     };
+
+    public Address getAddressObject(){
+        return this.address;
+    }
+
 }

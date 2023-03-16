@@ -25,4 +25,24 @@ public class Address {
     public String toString() {
         return streetAddressNumber + ", "  + street.toLowerCase() + ", " + city.toLowerCase() + ", " + province + ", " + postalCode.toUpperCase();
     }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public int getStreetAddressNumber() {
+        return streetAddressNumber;
+    }
 }

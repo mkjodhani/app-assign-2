@@ -8,6 +8,7 @@ import model.property.Property;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * @author mkjodhani
@@ -15,7 +16,7 @@ import java.util.HashMap;
  * @project Tenant Management System
  * @since 09/03/23
  */
-public class MockData {
+public class MockData extends Observable {
     private static MockData data;
     private HashMap<Integer, Lease> leases;
     private HashMap<Integer, Tenant> tenants;

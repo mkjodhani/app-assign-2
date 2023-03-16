@@ -93,4 +93,23 @@ public class Lease{
         this.property.show();
     }
 
+    public static int getTotalLeases() {
+        return totalLeases;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
 }

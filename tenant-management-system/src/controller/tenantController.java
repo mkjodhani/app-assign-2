@@ -1,7 +1,6 @@
 package controller;
 
 import model.person.Tenant;
-import model.property.Property;
 import services.users.TenantService;
 
 import java.util.ArrayList;

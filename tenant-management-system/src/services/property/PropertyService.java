@@ -82,4 +82,8 @@ public class PropertyService {
         }
         return propertyCollection;
     }
+    public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
+        this.data.getProperties().get(propertyType).put(property.getPropertyId(),property);
+        return property;
+    };
 }
