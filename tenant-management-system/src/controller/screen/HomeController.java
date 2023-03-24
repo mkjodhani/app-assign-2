@@ -7,6 +7,8 @@ package controller.screen;
  * @since 14/03/23
  */
 
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.data.MockData;
 import model.geography.Address;
 import model.person.Tenant;
 import model.property.House;
@@ -30,11 +33,14 @@ import services.users.TenantService;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-public class HomeController {
+public class HomeController implements Observer {
 
     private PropertyService propertyService = PropertyService.getPropertyService();
     private TenantService tenantService = TenantService.getTenantService();
+    private ListProperty<Property> properties;
     @FXML
     private VBox propertyList;
     @FXML
@@ -81,7 +87,7 @@ public class HomeController {
             ObservableList<Property> people = FXCollections.observableArrayList(propertyService.getAll());
             tableView.setItems(people);
             if(propertyList.getChildren().size()>0){
-                propertyList.getChildren().removeAll(propertyList.getChildren().get(0));
+                propertyList.getChildren().removeAll(propertyList.getChildren());
             }
             propertyList.getChildren().add(tableView);
         }catch (Exception e){
@@ -106,19 +112,16 @@ public class HomeController {
             TableColumn<Property, String> emailCol = new TableColumn<>("Email");
             emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-
-
             tableView.getColumns().add(idCol);
             tableView.getColumns().add(firstNameCol);
             tableView.getColumns().add(lastNameCol);
             tableView.getColumns().add(dateOfBirthCol);
             tableView.getColumns().add(emailCol);
 
-            Tenant tenant = new Tenant("Mayur","Jodhani",new Date(),"mkjodhani133@gmail.com");
             ObservableList<Tenant> people = FXCollections.observableArrayList(tenantService.getAll());
             tableView.setItems(people);
             if(tenantList.getChildren().size()>0){
-                tenantList.getChildren().removeAll(propertyList.getChildren().get(0));
+                tenantList.getChildren().removeAll(tenantList.getChildren());
             }
             tenantList.getChildren().add(tableView);
         }catch (Exception e){
@@ -155,7 +158,7 @@ public class HomeController {
             ObservableList<Lease> people = FXCollections.observableArrayList(lease);
             tableView.setItems(people);
             if(leaseList.getChildren().size()>0){
-                leaseList.getChildren().removeAll(propertyList.getChildren().get(0));
+                leaseList.getChildren().removeAll(leaseList.getChildren());
             }
             leaseList.getChildren().add(tableView);
         }catch (Exception e){
@@ -163,6 +166,7 @@ public class HomeController {
         }
     }
     public void initialize(){
+        MockData.getReference().addObserver(this);
         initializePropertyList();
         initializeTenantList();
         initializeLeaseList();
@@ -171,7 +175,7 @@ public class HomeController {
         Parent root = FXMLLoader.load(getClass().getResource("/property/rent-property.fxml"));
         Stage stage = new Stage();
         stage.setTitle("Rent Property");
-        stage.setScene(new Scene(root, 450, 450));
+        stage.setScene(new Scene(root, 700, 450));
         stage.show();
     }
 
@@ -230,4 +234,9 @@ public class HomeController {
         stage.setOnCloseRequest(e -> initializePropertyList());
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("UPDATETTETETTETETTETE");
+        initialize();
+    }
 }

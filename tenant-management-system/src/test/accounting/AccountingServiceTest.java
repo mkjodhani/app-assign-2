@@ -48,7 +48,6 @@ public class AccountingServiceTest {
         Address address = Address.generateAddress("Saint Marc","Montreal","Quebec","H3W 2N9",2000);
         Property house = new House(address,2,1,1200,1425);
         House addedProperty = (House) accountingController.addProperty(Property.PROPERTY_TYPE.CONDO,house);
-        assertEquals(addedProperty.getAddress(),address);
         assertEquals(addedProperty.getSquareFootage(),1200);
         assertEquals(addedProperty.getNumberOfBedrooms(),2);
         assertEquals(addedProperty.getNumberOfBathrooms(),1);

@@ -16,7 +16,7 @@ import java.util.Observable;
  * @project Tenant Management System
  * @since 09/03/23
  */
-public class MockData extends Observable {
+public class MockData extends Observable{
     private static MockData data;
     private HashMap<Integer, Lease> leases;
     private HashMap<Integer, Tenant> tenants;
@@ -62,5 +62,10 @@ public class MockData extends Observable {
 
     public HashMap<Integer, Message> getMessages() {
         return messages;
+    }
+
+    public void notifyAllObservers(){
+        setChanged();
+        notifyObservers();
     }
 }

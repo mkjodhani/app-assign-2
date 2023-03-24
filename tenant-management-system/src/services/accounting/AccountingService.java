@@ -30,11 +30,13 @@ public class AccountingService {
     }
     public Tenant addTenant(String firstName, String lastName, Date dateOfBirth, String email){
         Tenant tenant = new Tenant(firstName,lastName,dateOfBirth,email);
-        data.getTenants().put(tenant.getId(),tenant);
+        this.data.getTenants().put(tenant.getId(),tenant);
+        this.data.notifyAllObservers();
         return tenant;
     }
     public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
-        data.getProperties().get(propertyType).put(property.getPropertyId(),property);
+        this.data.getProperties().get(propertyType).put(property.getPropertyId(),property);
+        this.data.notifyAllObservers();
         return property;
     };
     public Collection<Property> getPropertiesByType(Property.PROPERTY_TYPE propertyType){
@@ -63,6 +65,7 @@ public class AccountingService {
         Lease lease = new Lease(tenant,property,months);
         data.addLease(lease);
         property.setStatus(Property.AVAILABILITY_TYPE.RENTED);
+        this.data.notifyAllObservers();
         return lease.getLeaseId();
     }
     public Lease getLease(int leaseId){

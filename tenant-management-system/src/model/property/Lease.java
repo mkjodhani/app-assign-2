@@ -45,6 +45,7 @@ public class Lease{
         MockData data = MockData.getReference();
         Transaction transaction = new Transaction((float) property.getRent(),this.leaseId,getPaymentID(currentMonth,currentYear));
         data.getTransactions().put(transaction.getTxnID(),transaction);
+        data.notifyAllObservers();
     }
 
     public boolean isRentPaidForCurrentMonth(){

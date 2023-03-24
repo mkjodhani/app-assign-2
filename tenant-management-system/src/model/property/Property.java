@@ -72,6 +72,7 @@ public abstract class Property extends Observable{
         table.addRow("Number Of Bathrooms",String.valueOf(numberOfBathrooms), Table.POSITION.LEFT);
         table.addRow("Property Id",String.valueOf(this.getPropertyId()), Table.POSITION.LEFT);
         table.addRow("Square Footage",String.valueOf(this.squareFootage), Table.POSITION.LEFT);
+        table.addRow("Rent",String.valueOf(this.rent), Table.POSITION.LEFT);
         table.addRow("Status",String.valueOf(status), Table.POSITION.LEFT);
         table.addRow("Property Type",String.valueOf(propertyType), Table.POSITION.LEFT);
         table.show();
