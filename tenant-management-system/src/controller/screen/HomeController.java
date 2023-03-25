@@ -16,9 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -32,15 +30,12 @@ import services.property.PropertyService;
 import services.users.TenantService;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 public class HomeController implements Observer {
 
     private PropertyService propertyService = PropertyService.getPropertyService();
     private TenantService tenantService = TenantService.getTenantService();
-    private ListProperty<Property> properties;
     @FXML
     private VBox propertyList;
     @FXML
@@ -207,33 +202,109 @@ public class HomeController implements Observer {
     public void onAboutUsClick(ActionEvent actionEvent) {
     }
 
-    public void onAddApartmentClick(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/property/add-apartment.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Apartment");
-        stage.setScene(new Scene(root, 700, 350));
-        stage.show();
-        stage.setOnCloseRequest(e -> initializePropertyList());
+    public void onAddPropertyClick(ActionEvent actionEvent) throws IOException {
+        String[] propertyTypes = new String[]{"Apartment","Condo","House"};
+        ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0],propertyTypes);
+        propertyTypeDialogBox.setTitle("Select Property Type");
+        Optional<String> selectedProperty = propertyTypeDialogBox.showAndWait();
+        if (selectedProperty.isPresent()){
+            if (selectedProperty.get().equals(propertyTypes[0])){
+                Parent root = FXMLLoader.load(getClass().getResource("/property/add-apartment.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Apartment");
+                stage.setScene(new Scene(root, 700, 350));
+                stage.show();
+                stage.setOnCloseRequest(e -> initializePropertyList());
+            }else if (selectedProperty.get().equals(propertyTypes[1])){
+                Parent root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Condo");
+                stage.setScene(new Scene(root, 700, 350));
+                stage.show();
+                stage.setOnCloseRequest(e -> initializePropertyList());
+            }
+            else {
+                Parent root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("House");
+                stage.setScene(new Scene(root, 700, 350));
+                stage.show();
+                stage.setOnCloseRequest(e -> initializePropertyList());
+            }
+        }
+
+    }
+    public void onShowRentedProperty(ActionEvent actionEvent) throws IOException {
+        Collection<Property> properties = new ArrayList<>();
+        for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
+            System.out.println("Type: "+propertyType);
+            Collection<Property> propertyCollection = propertyService.getPropertiesByStatus(propertyType, Property.AVAILABILITY_TYPE.RENTED);
+            if(propertyCollection.size() == 0){
+                System.out.println(String.format("No property found for %s type!",propertyType));
+            }
+            else{
+                for (Property house : propertyCollection){
+                    properties.add(house);
+                }
+            }
+        }
+        showPropertyList(properties,"Rented Properties");
+    }
+    public void onShowVacantProperty(ActionEvent actionEvent) throws IOException {
+        Collection<Property> properties = new ArrayList<>();
+        for (Property property: propertyService.getAll()){
+            if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED){
+                properties.add(property);
+            }
+        }
+        showPropertyList(properties,"Vacant Properties");
     }
 
-    public void onAddCondoClick(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Condo");
-        stage.setScene(new Scene(root, 700, 350));
-        stage.show();
-        stage.setOnCloseRequest(e -> initializePropertyList());
-    }
+    private void showPropertyList(Collection<Property> properties,String title){
+        TableView tableView = new TableView();
 
-    public void onAddHouseClick(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("House");
-        stage.setScene(new Scene(root, 700, 350));
-        stage.show();
-        stage.setOnCloseRequest(e -> initializePropertyList());
-    }
+        TableColumn<Property, String> propertyIdCol = new TableColumn<>("Property ID");
+        propertyIdCol.setCellValueFactory(new PropertyValueFactory<>("propertyId"));
 
+        TableColumn<Property, String> numberOfBedroomsCol = new TableColumn<>("#Bedrooms");
+        numberOfBedroomsCol.setCellValueFactory(new PropertyValueFactory<>("numberOfBedrooms"));
+
+        TableColumn<Property, String> numberOfBathroomsCol = new TableColumn<>("#Bathrooms");
+        numberOfBathroomsCol.setCellValueFactory(new PropertyValueFactory<>("numberOfBathrooms"));
+
+        TableColumn<Property, String> squareFootageCol = new TableColumn<>("Square Footage");
+        squareFootageCol.setCellValueFactory(new PropertyValueFactory<>("squareFootage"));
+
+        TableColumn<Property, String> propertyTypeCol = new TableColumn<>("Property Type");
+        propertyTypeCol.setCellValueFactory(new PropertyValueFactory<>("propertyType"));
+
+        TableColumn<Property, String> statusCol = new TableColumn<>("Status");
+        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        TableColumn<Property, String> rentCol = new TableColumn<>("Rent");
+        rentCol.setCellValueFactory(new PropertyValueFactory<>("rent"));
+
+        TableColumn<Property, String> addressCol = new TableColumn<>("Address");
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+
+        tableView.setPlaceholder(new Label("No property found!"));
+
+        tableView.getColumns().add(propertyIdCol);
+        tableView.getColumns().add(numberOfBathroomsCol);
+        tableView.getColumns().add(numberOfBedroomsCol);
+        tableView.getColumns().add(squareFootageCol);
+        tableView.getColumns().add(rentCol);
+        tableView.getColumns().add(statusCol);
+        tableView.getColumns().add(addressCol);
+
+        ObservableList<Property> people = FXCollections.observableArrayList(properties);
+        tableView.setItems(people);
+        Stage stage = new Stage();
+        Scene scene = new Scene(tableView);
+        stage.setScene(scene);
+        stage.setTitle(title);
+        stage.show();
+    }
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("UPDATETTETETTETETTETE");

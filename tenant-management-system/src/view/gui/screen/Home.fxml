@@ -62,9 +62,9 @@
         </Menu>
         <Menu mnemonicParsing="false" text="Property">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#onAddApartmentClick" text="Add Apartment" />
-            <MenuItem mnemonicParsing="false" onAction="#onAddCondoClick" text="Add Condo" />
-            <MenuItem mnemonicParsing="false" onAction="#onAddHouseClick" text="Add House" />
+              <MenuItem mnemonicParsing="false" onAction="#onAddPropertyClick" text="Add Property" />
+              <MenuItem mnemonicParsing="false" onAction="#onShowRentedProperty" text="Show Rented Properties" />
+              <MenuItem mnemonicParsing="false" onAction="#onShowVacantProperty" text="Show Vacant Properties" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
