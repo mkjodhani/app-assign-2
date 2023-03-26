@@ -81,7 +81,7 @@ public class RentPropertyController {
     public void onFetchInfo(ActionEvent actionEvent) {
         try{
             int propertyId = Integer.valueOf(propertyIdText.getText());
-            int tenantId = Integer.valueOf(propertyIdText.getText());
+            int tenantId = Integer.valueOf(tenantIdText .getText());
             Property property = propertyService.getPropertyByID(propertyId);
             Tenant tenant = tenantService.getTenantById(tenantId);
             if (property == null || tenant == null){
@@ -130,11 +130,7 @@ public class RentPropertyController {
                 alert.showAndWait();
             }
             else{
-                TilePane r = new TilePane();
-
-                // create a text input dialog
                 TextInputDialog dialog = new TextInputDialog("0");
-
                 // setHeaderText
                 dialog.setHeaderText("Enter months");
                 Optional<String> result = dialog.showAndWait();
@@ -158,6 +154,5 @@ public class RentPropertyController {
                 alert.setHeaderText("Input valid information.");
                 alert.showAndWait();
         }
-
     }
 }

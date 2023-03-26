@@ -7,8 +7,8 @@ package controller.screen;
  * @since 14/03/23
  */
 
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
+import controller.tenant.Notifications;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,13 +21,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.data.MockData;
-import model.geography.Address;
 import model.person.Tenant;
-import model.property.House;
 import model.property.Lease;
 import model.property.Property;
 import services.property.PropertyService;
 import services.users.TenantService;
+import view.GUI;
 
 import java.io.IOException;
 import java.util.*;
@@ -140,18 +139,23 @@ public class HomeController implements Observer {
             TableColumn<Lease, String> endDateCol = new TableColumn<>("End Date");
             endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
+            TableColumn<Lease, String> lastTransactionCol = new TableColumn<>("Last Payment");
+            lastTransactionCol.setCellValueFactory(cellData -> {
+                String month = "";
+                if (cellData.getValue().getLastTransaction() != null){
+                    month = cellData.getValue().getLastTransaction().getMonthYear();
+                }
+                return new SimpleStringProperty(month);
+            });
+
             tableView.getColumns().add(leaseIdCol);
             tableView.getColumns().add(startDateCol);
-            tableView.getColumns().add(activeCol);
             tableView.getColumns().add(endDateCol);
+            tableView.getColumns().add(activeCol);
+            tableView.getColumns().add(lastTransactionCol);
 
-            Tenant tenant = new Tenant("Mayur","Jodhani",new Date(),"mkjodhani133@gmail.com");
-            Address address1 = Address.generateAddress("Saint Marc","Montreal","Quebec","H3W 2N9",2000);
-            Property house1 = new House(address1,2,1,1200,1425);
-            Lease lease = new Lease(tenant,house1,11);
-
-            ObservableList<Lease> people = FXCollections.observableArrayList(lease);
-            tableView.setItems(people);
+            ObservableList<Lease> leases = FXCollections.observableArrayList(propertyService.getLeases());
+            tableView.setItems(leases);
             if(leaseList.getChildren().size()>0){
                 leaseList.getChildren().removeAll(leaseList.getChildren());
             }
@@ -166,6 +170,73 @@ public class HomeController implements Observer {
         initializeTenantList();
         initializeLeaseList();
     }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        initialize();
+    }
+    public void onShowInterestedPropertyClick(ActionEvent actionEvent) {
+        int tenantID =  GUI.getIntegerValue("Provide Tenant ID","Tenant ID");
+        Tenant tenant = tenantService.getTenantById(tenantID);
+        if (tenant == null){
+            GUI.showErrorMessageBox("Error!","No tenant found!","");
+            return;
+        }
+        int propertyID =  GUI.getIntegerValue("Provide Property ID","Property ID");
+        Property property = propertyService.getPropertyByID(propertyID);
+        if (property == null){
+            GUI.showErrorMessageBox("Error!","No property found!","");
+        }
+        property.addObserver(tenant);
+        GUI.showSuccessMessageBox("Success!","You have registered for the provided property.","You will get notification if the property status is updated.");
+    }
+    public void onAboutUsClick(ActionEvent actionEvent) {
+    }
+    public void onShowNotificationsClick(ActionEvent actionEvent) throws IOException {
+        int tenantID = GUI.getIntegerValue("Tenant ID","Provide valid Tenant ID");
+        System.out.println("tenantID::"+tenantID);
+        Tenant tenant = tenantService.getTenantById(tenantID);
+        if (tenant == null){
+            GUI.showErrorMessageBox("Error!","No tenant found!","");
+            return;
+        }
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tenant/notifications.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Notifications notifications = fxmlLoader.getController();
+        notifications.setTenant(tenant);
+        stage.setTitle("Payment");
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.show();
+    }
+    public void onChangePropertyStatusClick(ActionEvent actionEvent) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Provide Property ID");
+        dialog.setContentText("Property ID");
+        Optional<String> propertyID = dialog.showAndWait();
+        if (!propertyID.isPresent()){
+            return;
+        }
+        try{
+            int propertyIDValue = Integer.valueOf(propertyID.get());
+            Property property = propertyService.getPropertyByID(propertyIDValue);
+            if (property != null){
+                Property.AVAILABILITY_TYPE selectedType = GUI.selectPropertyStatus();
+                if (selectedType != null){
+                    boolean result = propertyService.updatePropertyStatus(propertyIDValue,selectedType);
+                    if (result){
+                        GUI.showSuccessMessageBox("Success!","Lease terminated  successfully!","Property status has been updated.");
+                    }
+                    else {
+                        GUI.showErrorMessageBox("Error!","Something went wrong!","");
+                    }
+                }
+            }
+        }catch (Exception e){
+            GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
+        }
+    }
     public void onRentPropertyClick(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/property/rent-property.fxml"));
         Stage stage = new Stage();
@@ -173,22 +244,22 @@ public class HomeController implements Observer {
         stage.setScene(new Scene(root, 700, 450));
         stage.show();
     }
-
-    public void onAddPaymentClick(ActionEvent actionEvent) {
-    }
-
-    public void onChangePropertyStatusClick(ActionEvent actionEvent) {
-    }
-
     public void onTerminateLeaseClick(ActionEvent actionEvent) {
+        try{
+            int leaseIDValue =  GUI.getIntegerValue("Provide Lease ID","Lease ID");
+            if (leaseIDValue <=0){
+                return;
+            }
+            boolean result = propertyService.terminateLease(leaseIDValue);
+            if (result){
+                GUI.showSuccessMessageBox("Success!","Lease terminated  successfully!","Property status has been updated.");
+            }else {
+                GUI.showErrorMessageBox("Error!","Something went wrong!","");
+            }
+        }catch (Exception e){
+            GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
+        }
     }
-
-    public void onShowInterestedPropertyClick(ActionEvent actionEvent) {
-    }
-
-    public void onShowNotificationsClick(ActionEvent actionEvent) {
-    }
-
     public void onAddTenantClick(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/tenant/add-tenant.fxml"));
         Stage stage = new Stage();
@@ -198,10 +269,6 @@ public class HomeController implements Observer {
         stage.setOnCloseRequest(e -> initializeTenantList());
         stage.show();
     }
-
-    public void onAboutUsClick(ActionEvent actionEvent) {
-    }
-
     public void onAddPropertyClick(ActionEvent actionEvent) throws IOException {
         String[] propertyTypes = new String[]{"Apartment","Condo","House"};
         ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0],propertyTypes);
@@ -234,7 +301,7 @@ public class HomeController implements Observer {
         }
 
     }
-    public void onShowRentedProperty(ActionEvent actionEvent) throws IOException {
+    public void onShowRentedProperty(ActionEvent actionEvent){
         Collection<Property> properties = new ArrayList<>();
         for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
             System.out.println("Type: "+propertyType);
@@ -250,7 +317,7 @@ public class HomeController implements Observer {
         }
         showPropertyList(properties,"Rented Properties");
     }
-    public void onShowVacantProperty(ActionEvent actionEvent) throws IOException {
+    public void onShowVacantProperty(ActionEvent actionEvent){
         Collection<Property> properties = new ArrayList<>();
         for (Property property: propertyService.getAll()){
             if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED){
@@ -259,7 +326,6 @@ public class HomeController implements Observer {
         }
         showPropertyList(properties,"Vacant Properties");
     }
-
     private void showPropertyList(Collection<Property> properties,String title){
         TableView tableView = new TableView();
 
@@ -305,9 +371,63 @@ public class HomeController implements Observer {
         stage.setTitle(title);
         stage.show();
     }
-    @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("UPDATETTETETTETETTETE");
-        initialize();
+    public void showTenantsWithoutPaidRent(){
+        Collection<Tenant> tenants = tenantService.getTenantsByRentPaid(false);
+        showTenantList(tenants,"Tenants without paid rent");
+    }
+    public void showTenantsWithPaidRent(){
+        Collection<Tenant> tenants = tenantService.getTenantsByRentPaid(true);
+        showTenantList(tenants,"Tenants with paid rent");
+    }
+    private void showTenantList(Collection<Tenant> tenants,String title){
+        TableView tableView = new TableView();
+        TableColumn<Tenant, String> idCol = new TableColumn<>("Tenant ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Property, String> firstNameCol = new TableColumn<>("First Name");
+        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+
+        TableColumn<Property, String> lastNameCol = new TableColumn<>("Last Name");
+        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+
+        TableColumn<Property, String> dateOfBirthCol = new TableColumn<>("Date Of Birth");
+        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+
+        TableColumn<Property, String> emailCol = new TableColumn<>("Email");
+        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+
+        tableView.getColumns().add(idCol);
+        tableView.getColumns().add(firstNameCol);
+        tableView.getColumns().add(lastNameCol);
+        tableView.getColumns().add(dateOfBirthCol);
+        tableView.getColumns().add(emailCol);
+        tableView.setItems(FXCollections.observableArrayList(tenants));
+        tableView.setPlaceholder(new Label("No tenants found!"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(tableView);
+        stage.setScene(scene);
+        stage.setTitle(title);
+        stage.show();
+    }
+    public void payRent(ActionEvent actionEvent) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Provide Lease ID");
+        dialog.setContentText("Lease ID");
+        Optional<String> leaseID = dialog.showAndWait();
+
+        if (!leaseID.isPresent()){
+            return;
+        }
+        try{
+            int leaseIDValue = Integer.valueOf(leaseID.get());
+            boolean result = propertyService.payRent(leaseIDValue);
+            if (result){
+                GUI.showSuccessMessageBox("Success!","Transaction recorded successfully!","Rent has been paid successfully!");
+            }else {
+                GUI.showErrorMessageBox("Error!","Something went wrong!","");
+            }
+        }catch (Exception e){
+            GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
+        }
     }
 }

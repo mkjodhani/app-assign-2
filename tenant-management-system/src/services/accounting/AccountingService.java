@@ -60,6 +60,7 @@ public class AccountingService {
             return -1;
         }
         else if (property.getStatus() == Property.AVAILABILITY_TYPE.RENTED){
+            property.addObserver(tenant);
             return -1;
         }
         Lease lease = new Lease(tenant,property,months);

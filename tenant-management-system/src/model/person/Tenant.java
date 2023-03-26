@@ -39,8 +39,12 @@ public class Tenant extends Person implements Observer {
         return interestedProperties;
     }
 
-    public Stack<Message> getMessages() {
-        return messages;
+    public Collection<Message> getMessages() {
+        ArrayList<Message> messageList = new ArrayList<>();
+        for (Object message:messages.toArray()){
+            messageList.add((Message)message);
+        }
+        return messageList;
     }
 
     public void showMessages(){

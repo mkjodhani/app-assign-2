@@ -4,17 +4,20 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import model.geography.Address;
 import model.person.Tenant;
+import model.property.Condo;
 import model.property.House;
 import model.property.Property;
+import services.accounting.AccountingService;
 import services.property.PropertyService;
 import services.users.TenantService;
 
-import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * @author mkjodhani
@@ -23,6 +26,31 @@ import java.util.Observer;
  * @since 15/03/23
  */
 public class GUI extends Application implements Observer {
+
+    public static void importDummyData(){
+        AccountingService accountingService = AccountingService.getAccountingService();
+        PropertyService propertyService = PropertyService.getPropertyService();
+        TenantService tenantService = TenantService.getTenantService();
+        Address address = Address.generateAddress("Saint Marc","Montreal","Quebec","H3W 1C5",2000);
+        // ADD PROPERTY
+        Property property1 = new Condo(address,2,1,1200,1905,1200);
+        Property property2 = new Condo(address,5,3,1500,1405,2500);
+        Property property3 = new Condo(address,3,7,2000,1105,2000);
+        propertyService.addProperty(property1.getPropertyType(),property1);
+        propertyService.addProperty(property2.getPropertyType(),property2);
+        propertyService.addProperty(property3.getPropertyType(),property3);
+
+        tenantService.addTenant("Mayur","Jodhani",new Date(),"mkjodhani@gmail.com");
+        tenantService.addTenant("Snehee","Patel",new Date(),"snehee@gmail.com");
+        tenantService.addTenant("Dharmil","Vaghasiya",new Date(),"dharmil@gmail.com");
+
+
+        accountingService.subscribeProperty(2,1);
+        int leaseID = accountingService.rentUnit(1,1,10);
+        tenantService.payRent(leaseID);
+//        accountingService.
+    }
+
     Stage stage;
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -35,12 +63,7 @@ public class GUI extends Application implements Observer {
     }
 
     public static void main(String[] args) {
-        TenantService tenantService = TenantService.getTenantService();
-        tenantService.addTenant("Mayur","Jodhani",new Date(),"mkjodhani133@gmail.com");
-        PropertyService propertyService = PropertyService.getPropertyService();
-        Address address = Address.generateAddress("Saint Marc","Montreal","Quebec","H3W 2N9",2000);
-        Property house = new House(address,2,1,1200,1425);
-        propertyService.addProperty(Property.PROPERTY_TYPE.CONDO,house);
+        importDummyData();
         launch(args);
     }
 
@@ -48,4 +71,57 @@ public class GUI extends Application implements Observer {
     public void update(Observable o, Object arg) {
         stage.show();
     }
+
+    public static void showSuccessMessageBox(String title,String header,String message){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    public static void showErrorMessageBox(String title,String header,String message){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static Property.PROPERTY_TYPE selectPropertyType(){
+        ChoiceDialog<Property.PROPERTY_TYPE> propertyTypeDialogBox = new ChoiceDialog<>(Property.PROPERTY_TYPE.values()[0], Property.PROPERTY_TYPE.values());
+        propertyTypeDialogBox.setTitle("Select Property Type");
+        Optional<Property.PROPERTY_TYPE> selectedOption = propertyTypeDialogBox.showAndWait();
+        if (selectedOption.isPresent()){
+            return selectedOption.get();
+        }
+        return null;
+    }
+    public static Property.AVAILABILITY_TYPE selectPropertyStatus(){
+        ChoiceDialog<Property.AVAILABILITY_TYPE> propertyTypeDialogBox = new ChoiceDialog<>(Property.AVAILABILITY_TYPE.values()[0], Property.AVAILABILITY_TYPE.values());
+        propertyTypeDialogBox.setTitle("Status");
+        Optional<Property.AVAILABILITY_TYPE> selectedOption = propertyTypeDialogBox.showAndWait();
+        if (selectedOption.isPresent()){
+            return selectedOption.get();
+        }
+        return null;
+    }
+
+    public static int getIntegerValue(String title,String description){
+        TextInputDialog integerDialogBox = new TextInputDialog();
+        integerDialogBox.setTitle(title);
+        integerDialogBox.setContentText(description);
+        Optional<String> selectedOption = integerDialogBox.showAndWait();
+        if(!selectedOption.isPresent()){
+            return 0;
+        }
+        try {
+            return Integer.valueOf(selectedOption.get());
+        }
+        catch (Exception e){
+            showErrorMessageBox("Error!","Please provide valid information.","");
+            return getIntegerValue(title,description);
+        }
+    }
+
+
 }

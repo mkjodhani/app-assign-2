@@ -54,7 +54,7 @@ public class PropertyService {
     }
 
     public boolean payRent(int leaseID) {
-        Lease lease =this.data.getLeases().getOrDefault(leaseID,null);
+        Lease lease = this.data.getLeases().getOrDefault(leaseID,null);
         if (lease == null){
             return false;
         }
@@ -74,6 +74,9 @@ public class PropertyService {
             }
         }
         return propertyCollection;
+    }
+    public Collection<Lease> getLeases(){
+        return this.data.getLeases().values();
     }
 
     public Collection<Property> getAll() {

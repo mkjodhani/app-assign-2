@@ -113,4 +113,15 @@ public class Lease{
     public boolean isActive() {
         return active;
     }
+    public Transaction getLastTransaction(){
+        MockData data = MockData.getReference();
+        Transaction transaction = null;
+        int txID = 0;
+        for(Transaction tx: data.getTransactions().values()){
+            if(tx.getLeaseID() == this.leaseId && txID <=tx.getTxnID() ){
+                transaction = tx;
+            }
+        }
+        return transaction;
+    }
 }
