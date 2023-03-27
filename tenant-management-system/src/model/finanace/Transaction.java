@@ -44,4 +44,9 @@ public class Transaction {
     public String getMonth() {
         return month;
     }
+    public String getMonthYear(){
+        int monthValue= Integer.valueOf(month.split(" ")[0]), yearValue = Integer.valueOf(month.split(" ")[1]);
+        return String.format("%d/%d", monthValue, yearValue + 1900);
+
+    }
 }

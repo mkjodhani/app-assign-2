@@ -40,6 +40,7 @@ public class PropertyService {
             return false;
         }
         property.setStatus(availabilityType);
+        this.data.notifyAllObservers();
         return true;
     }
     public boolean terminateLease(int leaseID){
@@ -48,15 +49,17 @@ public class PropertyService {
             return false;
         }
         lease.terminateLease();
+        this.data.notifyAllObservers();
         return true;
     }
 
     public boolean payRent(int leaseID) {
-        Lease lease =this.data.getLeases().getOrDefault(leaseID,null);
+        Lease lease = this.data.getLeases().getOrDefault(leaseID,null);
         if (lease == null){
             return false;
         }
         lease.payRent();
+        this.data.notifyAllObservers();
         return true;
     }
 
@@ -72,6 +75,9 @@ public class PropertyService {
         }
         return propertyCollection;
     }
+    public Collection<Lease> getLeases(){
+        return this.data.getLeases().values();
+    }
 
     public Collection<Property> getAll() {
         ArrayList<Property> propertyCollection = new ArrayList<>();
@@ -82,4 +88,9 @@ public class PropertyService {
         }
         return propertyCollection;
     }
+    public Property addProperty(Property.PROPERTY_TYPE propertyType, Property property){
+        this.data.getProperties().get(propertyType).put(property.getPropertyId(),property);
+        this.data.notifyAllObservers();
+        return property;
+    };
 }

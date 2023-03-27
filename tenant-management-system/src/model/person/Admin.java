@@ -12,14 +12,13 @@ import java.util.Observable;
  * @since 02/03/23
  */
 public class Admin extends Person{
-    public Admin(String firstName, String lastName, Date dateOfBirth, String mobileNumber) {
-        super(firstName, lastName, dateOfBirth, mobileNumber);
+    public Admin(String firstName, String lastName, Date dateOfBirth, String email) {
+        super(firstName, lastName, dateOfBirth, email);
     }
 
     @Override
     public void update(Observable o, Object arg) {
         Property property = (Property) arg;
-        System.out.println("Admin Panel");
         property.show();
     }
 }

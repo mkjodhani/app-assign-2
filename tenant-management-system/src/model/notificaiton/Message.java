@@ -28,4 +28,16 @@ public class Message {
         table.addRow("",timeStamp.toLocaleString(), Table.POSITION.LEFT);
         table.show();
     }
+
+    public Date getTimeStamp() {
+        return timeStamp;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public String getMessage() {
+        return message;
+    }
 }

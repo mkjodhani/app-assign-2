@@ -3,8 +3,11 @@ package services.users;
 import model.data.MockData;
 import model.person.Tenant;
 import model.property.Lease;
+import model.property.Property;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 
 
 /**
@@ -42,9 +45,19 @@ public class TenantService {
             return false;
         }
         lease.payRent();
+        this.data.notifyAllObservers();
         return true;
     }
     public Tenant getTenantById(int tenantID){
         return this.data.getTenants().getOrDefault(tenantID,null);
+    }
+    public Tenant addTenant(String firstName, String lastName, Date dateOfBirth, String email){
+        Tenant tenant = new Tenant(firstName,lastName,dateOfBirth,email);
+        this.data.getTenants().put(tenant.getId(),tenant);
+        this.data.notifyAllObservers();
+        return tenant;
+    }
+    public Collection<Tenant> getAll() {
+        return data.getTenants().values();
     }
 }

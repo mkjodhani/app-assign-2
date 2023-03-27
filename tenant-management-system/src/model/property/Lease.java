@@ -45,6 +45,7 @@ public class Lease{
         MockData data = MockData.getReference();
         Transaction transaction = new Transaction((float) property.getRent(),this.leaseId,getPaymentID(currentMonth,currentYear));
         data.getTransactions().put(transaction.getTxnID(),transaction);
+        data.notifyAllObservers();
     }
 
     public boolean isRentPaidForCurrentMonth(){
@@ -93,4 +94,34 @@ public class Lease{
         this.property.show();
     }
 
+    public static int getTotalLeases() {
+        return totalLeases;
+    }
+
+    public Property getProperty() {
+        return property;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+    public Transaction getLastTransaction(){
+        MockData data = MockData.getReference();
+        Transaction transaction = null;
+        int txID = 0;
+        for(Transaction tx: data.getTransactions().values()){
+            if(tx.getLeaseID() == this.leaseId && txID <=tx.getTxnID() ){
+                transaction = tx;
+            }
+        }
+        return transaction;
+    }
 }

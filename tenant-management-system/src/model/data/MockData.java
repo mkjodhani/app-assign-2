@@ -8,6 +8,7 @@ import model.property.Property;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * @author mkjodhani
@@ -15,7 +16,7 @@ import java.util.HashMap;
  * @project Tenant Management System
  * @since 09/03/23
  */
-public class MockData {
+public class MockData extends Observable{
     private static MockData data;
     private HashMap<Integer, Lease> leases;
     private HashMap<Integer, Tenant> tenants;
@@ -32,6 +33,8 @@ public class MockData {
         properties.put(Property.PROPERTY_TYPE.APARTMENT,new HashMap<>());
         properties.put(Property.PROPERTY_TYPE.CONDO,new HashMap<>());
         properties.put(Property.PROPERTY_TYPE.HOUSE,new HashMap<>());
+
+
     }
 
     public static MockData getReference(){
@@ -61,5 +64,10 @@ public class MockData {
 
     public HashMap<Integer, Message> getMessages() {
         return messages;
+    }
+
+    public void notifyAllObservers(){
+        setChanged();
+        notifyObservers();
     }
 }
