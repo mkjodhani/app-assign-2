@@ -8,6 +8,7 @@ package controller.screen;
  */
 
 import controller.tenant.NotificationsController;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,130 +42,139 @@ public class HomeController implements Observer {
     private VBox tenantList;
     @FXML
     private VBox leaseList;
+
+    private Stage stage;
     private void initializePropertyList(){
-        try{
-            TableView tableView = new TableView();
+        Platform.runLater(() ->{
+            try{
+                TableView tableView = new TableView();
 
-            TableColumn<Property, String> propertyIdCol = new TableColumn<>("Property ID");
-            propertyIdCol.setCellValueFactory(new PropertyValueFactory<>("propertyId"));
+                TableColumn<Property, String> propertyIdCol = new TableColumn<>("Property ID");
+                propertyIdCol.setCellValueFactory(new PropertyValueFactory<>("propertyId"));
 
-            TableColumn<Property, String> numberOfBedroomsCol = new TableColumn<>("#Bedrooms");
-            numberOfBedroomsCol.setCellValueFactory(new PropertyValueFactory<>("numberOfBedrooms"));
+                TableColumn<Property, String> numberOfBedroomsCol = new TableColumn<>("#Bedrooms");
+                numberOfBedroomsCol.setCellValueFactory(new PropertyValueFactory<>("numberOfBedrooms"));
 
-            TableColumn<Property, String> numberOfBathroomsCol = new TableColumn<>("#Bathrooms");
-            numberOfBathroomsCol.setCellValueFactory(new PropertyValueFactory<>("numberOfBathrooms"));
+                TableColumn<Property, String> numberOfBathroomsCol = new TableColumn<>("#Bathrooms");
+                numberOfBathroomsCol.setCellValueFactory(new PropertyValueFactory<>("numberOfBathrooms"));
 
-            TableColumn<Property, String> squareFootageCol = new TableColumn<>("Square Footage");
-            squareFootageCol.setCellValueFactory(new PropertyValueFactory<>("squareFootage"));
+                TableColumn<Property, String> squareFootageCol = new TableColumn<>("Square Footage");
+                squareFootageCol.setCellValueFactory(new PropertyValueFactory<>("squareFootage"));
 
-            TableColumn<Property, String> propertyTypeCol = new TableColumn<>("Property Type");
-            propertyTypeCol.setCellValueFactory(new PropertyValueFactory<>("propertyType"));
+                TableColumn<Property, String> propertyTypeCol = new TableColumn<>("Property Type");
+                propertyTypeCol.setCellValueFactory(new PropertyValueFactory<>("propertyType"));
 
-            TableColumn<Property, String> statusCol = new TableColumn<>("Status");
-            statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+                TableColumn<Property, String> statusCol = new TableColumn<>("Status");
+                statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-            TableColumn<Property, String> rentCol = new TableColumn<>("Rent");
-            rentCol.setCellValueFactory(new PropertyValueFactory<>("rent"));
+                TableColumn<Property, String> rentCol = new TableColumn<>("Rent");
+                rentCol.setCellValueFactory(new PropertyValueFactory<>("rent"));
 
-            TableColumn<Property, String> addressCol = new TableColumn<>("Address");
-            addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+                TableColumn<Property, String> addressCol = new TableColumn<>("Address");
+                addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
 
 
-            tableView.getColumns().add(propertyIdCol);
-            tableView.getColumns().add(numberOfBathroomsCol);
-            tableView.getColumns().add(numberOfBedroomsCol);
-            tableView.getColumns().add(squareFootageCol);
-            tableView.getColumns().add(rentCol);
-            tableView.getColumns().add(statusCol);
-            tableView.getColumns().add(addressCol);
+                tableView.getColumns().add(propertyIdCol);
+                tableView.getColumns().add(numberOfBathroomsCol);
+                tableView.getColumns().add(numberOfBedroomsCol);
+                tableView.getColumns().add(squareFootageCol);
+                tableView.getColumns().add(rentCol);
+                tableView.getColumns().add(statusCol);
+                tableView.getColumns().add(addressCol);
 
-            ObservableList<Property> people = FXCollections.observableArrayList(propertyService.getAll());
-            tableView.setItems(people);
-            if(propertyList.getChildren().size()>0){
-                propertyList.getChildren().removeAll(propertyList.getChildren());
+                ObservableList<Property> people = FXCollections.observableArrayList(propertyService.getAll());
+                tableView.setItems(people);
+                if(propertyList.getChildren().size()>0){
+                    propertyList.getChildren().removeAll(propertyList.getChildren());
+                }
+                propertyList.getChildren().add(tableView);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            propertyList.getChildren().add(tableView);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        });
     }
     private void initializeTenantList(){
-        try{
-            TableView tableView = new TableView();
-            TableColumn<Tenant, String> idCol = new TableColumn<>("Tenant ID");
-            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        Platform.runLater(() ->{
+            try{
+                TableView tableView = new TableView();
+                TableColumn<Tenant, String> idCol = new TableColumn<>("Tenant ID");
+                idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-            TableColumn<Property, String> firstNameCol = new TableColumn<>("First Name");
-            firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+                TableColumn<Property, String> firstNameCol = new TableColumn<>("First Name");
+                firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
-            TableColumn<Property, String> lastNameCol = new TableColumn<>("Last Name");
-            lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+                TableColumn<Property, String> lastNameCol = new TableColumn<>("Last Name");
+                lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
-            TableColumn<Property, String> dateOfBirthCol = new TableColumn<>("Date Of Birth");
-            dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+                TableColumn<Property, String> dateOfBirthCol = new TableColumn<>("Date Of Birth");
+                dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
 
-            TableColumn<Property, String> emailCol = new TableColumn<>("Email");
-            emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+                TableColumn<Property, String> emailCol = new TableColumn<>("Email");
+                emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-            tableView.getColumns().add(idCol);
-            tableView.getColumns().add(firstNameCol);
-            tableView.getColumns().add(lastNameCol);
-            tableView.getColumns().add(dateOfBirthCol);
-            tableView.getColumns().add(emailCol);
+                tableView.getColumns().add(idCol);
+                tableView.getColumns().add(firstNameCol);
+                tableView.getColumns().add(lastNameCol);
+                tableView.getColumns().add(dateOfBirthCol);
+                tableView.getColumns().add(emailCol);
 
-            ObservableList<Tenant> people = FXCollections.observableArrayList(tenantService.getAll());
-            tableView.setItems(people);
-            if(tenantList.getChildren().size()>0){
-                tenantList.getChildren().removeAll(tenantList.getChildren());
+                ObservableList<Tenant> people = FXCollections.observableArrayList(tenantService.getAll());
+                tableView.setItems(people);
+                if(tenantList.getChildren().size()>0){
+                    tenantList.getChildren().removeAll(tenantList.getChildren());
+                }
+                tenantList.getChildren().add(tableView);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            tenantList.getChildren().add(tableView);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        });
     }
     private void initializeLeaseList(){
-        try{
-            TableView tableView = new TableView();
+        Platform.runLater(() ->{
+            try{
+                TableView tableView = new TableView();
 
 
-            TableColumn<Lease, String> leaseIdCol = new TableColumn<>("Lease ID");
-            leaseIdCol.setCellValueFactory(new PropertyValueFactory<>("leaseId"));
+                TableColumn<Lease, String> leaseIdCol = new TableColumn<>("Lease ID");
+                leaseIdCol.setCellValueFactory(new PropertyValueFactory<>("leaseId"));
 
-            TableColumn<Lease, String> activeCol = new TableColumn<>("Active");
-            activeCol.setCellValueFactory(new PropertyValueFactory<>("active"));
+                TableColumn<Lease, String> activeCol = new TableColumn<>("Active");
+                activeCol.setCellValueFactory(new PropertyValueFactory<>("active"));
 
-            TableColumn<Lease, String> startDateCol = new TableColumn<>("Start Date");
-            startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+                TableColumn<Lease, String> startDateCol = new TableColumn<>("Start Date");
+                startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
 
-            TableColumn<Lease, String> endDateCol = new TableColumn<>("End Date");
-            endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+                TableColumn<Lease, String> endDateCol = new TableColumn<>("End Date");
+                endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
 
-            TableColumn<Lease, String> lastTransactionCol = new TableColumn<>("Last Payment");
-            lastTransactionCol.setCellValueFactory(cellData -> {
-                String month = "";
-                if (cellData.getValue().getLastTransaction() != null){
-                    month = cellData.getValue().getLastTransaction().getMonthYear();
+                TableColumn<Lease, String> lastTransactionCol = new TableColumn<>("Last Payment");
+                lastTransactionCol.setCellValueFactory(cellData -> {
+                    String month = "";
+                    if (cellData.getValue().getLastTransaction() != null){
+                        month = cellData.getValue().getLastTransaction().getMonthYear();
+                    }
+                    return new SimpleStringProperty(month);
+                });
+
+                tableView.getColumns().add(leaseIdCol);
+                tableView.getColumns().add(startDateCol);
+                tableView.getColumns().add(endDateCol);
+                tableView.getColumns().add(activeCol);
+                tableView.getColumns().add(lastTransactionCol);
+
+                ObservableList<Lease> leases = FXCollections.observableArrayList(propertyService.getLeases());
+                tableView.setItems(leases);
+                if(leaseList.getChildren().size()>0){
+                    leaseList.getChildren().removeAll(leaseList.getChildren());
                 }
-                return new SimpleStringProperty(month);
-            });
-
-            tableView.getColumns().add(leaseIdCol);
-            tableView.getColumns().add(startDateCol);
-            tableView.getColumns().add(endDateCol);
-            tableView.getColumns().add(activeCol);
-            tableView.getColumns().add(lastTransactionCol);
-
-            ObservableList<Lease> leases = FXCollections.observableArrayList(propertyService.getLeases());
-            tableView.setItems(leases);
-            if(leaseList.getChildren().size()>0){
-                leaseList.getChildren().removeAll(leaseList.getChildren());
+                leaseList.getChildren().add(tableView);
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            leaseList.getChildren().add(tableView);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        });
     }
     public void initialize(){
+
         MockData.getReference().addObserver(this);
         initializePropertyList();
         initializeTenantList();
@@ -280,14 +290,18 @@ public class HomeController implements Observer {
                 stage.setTitle("Apartment");
                 stage.setScene(new Scene(root, 700, 350));
                 stage.show();
-                stage.setOnCloseRequest(e -> initializePropertyList());
+                stage.setOnCloseRequest(e -> {
+                    initializePropertyList();
+                });
             }else if (selectedProperty.get().equals(propertyTypes[1])){
                 Parent root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle("Condo");
                 stage.setScene(new Scene(root, 700, 350));
                 stage.show();
-                stage.setOnCloseRequest(e -> initializePropertyList());
+                stage.setOnCloseRequest(e -> {
+                    initializePropertyList();
+                });
             }
             else {
                 Parent root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
@@ -295,7 +309,9 @@ public class HomeController implements Observer {
                 stage.setTitle("House");
                 stage.setScene(new Scene(root, 700, 350));
                 stage.show();
-                stage.setOnCloseRequest(e -> initializePropertyList());
+                stage.setOnCloseRequest(e -> {
+                    initializePropertyList();
+                });
             }
         }
 

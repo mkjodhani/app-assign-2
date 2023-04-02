@@ -64,11 +64,12 @@ public class AddApartmentController {
     Button addApartmentButton;
 
     public void initialize(){
-        provinceText.getItems().setAll(provinces);
+        Platform.runLater(() ->{
+            provinceText.getItems().setAll(provinces);
+        });
     }
 
     public void addApartment(ActionEvent actionEvent) {
-
         try{
             System.out.println(aptNumberText.getText());
             int aptNumber,numberOfBedrooms,numberOfBathrooms,streetAddressNumber;
@@ -85,14 +86,15 @@ public class AddApartmentController {
             province = provinceText.getValue();
             postalCode = postalCodeText.getText();
             Address address = Address.generateAddress(street,city,province,postalCode,streetAddressNumber);
-            Property property = new Apartment(address,numberOfBedrooms,numberOfBathrooms,squareFootage,aptNumber,rent);
-            property = propertyService.addProperty(Property.PROPERTY_TYPE.APARTMENT,property);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText("Property #"+property.getPropertyId() +" added successfully!");
-            alert.setContentText(address.toString());
-            clearInput();
-            alert.showAndWait();
+            Platform.runLater(() ->{
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                Property property = new Apartment(address,numberOfBedrooms,numberOfBathrooms,squareFootage,aptNumber,rent);
+                property = propertyService.addProperty(Property.PROPERTY_TYPE.APARTMENT,property);    alert.setTitle("Success");
+                alert.setHeaderText("Property #"+property.getPropertyId() +" added successfully!");
+                alert.setContentText(address.toString());
+                clearInput();
+                alert.showAndWait();
+            });
 
         }catch (Exception e){
             e.printStackTrace();
@@ -105,15 +107,17 @@ public class AddApartmentController {
         }
     }
     private void clearInput(){
-        aptNumberText.setText("");
-        numberOfBathroomsText.setText("");
-        numberOfBedroomsText.setText("");
-        streetAddressNumberText.setText("");
-        rentText.setText("");
-        streetText.setText("");
-        cityText.setText("");
-        postalCodeText.setText("");
-        provinceText.setValue("");
-        squareFootageText.setText("");
+        Platform.runLater(() ->{
+            aptNumberText.setText("");
+            numberOfBathroomsText.setText("");
+            numberOfBedroomsText.setText("");
+            streetAddressNumberText.setText("");
+            rentText.setText("");
+            streetText.setText("");
+            cityText.setText("");
+            postalCodeText.setText("");
+            provinceText.setValue("");
+            squareFootageText.setText("");
+        });
     }
 }
