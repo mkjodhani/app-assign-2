@@ -76,7 +76,6 @@ public class AddCondoController {
             alert.setHeaderText("Something went wrong!!");
             alert.setContentText(e.getMessage());
             clearInput();
-
             alert.showAndWait();
         }
     }
