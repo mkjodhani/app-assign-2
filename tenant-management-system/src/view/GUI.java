@@ -69,7 +69,11 @@ public class GUI extends Application implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        stage.show();
+        Thread thread = new Thread(){
+            public void run(){
+                stage.show();
+            }
+        };
     }
 
     public static void showSuccessMessageBox(String title,String header,String message){
