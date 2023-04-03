@@ -27,6 +27,8 @@ public class Tenant extends Person implements Observer {
         Message message = new Message(this.id,messageString);
         System.out.println("Notification received by Tenant #"+this.id+" :: "+messageString);
         messages.push(message);
+        setChanged();
+        notifyObservers();
         if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED ){
             interestedProperties.put(property.getPropertyId(),property);
         }

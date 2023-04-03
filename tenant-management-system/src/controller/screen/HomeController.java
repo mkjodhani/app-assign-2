@@ -7,7 +7,7 @@ package controller.screen;
  * @since 14/03/23
  */
 
-import controller.tenant.Notifications;
+import controller.tenant.NotificationsController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -194,7 +194,6 @@ public class HomeController implements Observer {
     }
     public void onShowNotificationsClick(ActionEvent actionEvent) throws IOException {
         int tenantID = GUI.getIntegerValue("Tenant ID","Provide valid Tenant ID");
-        System.out.println("tenantID::"+tenantID);
         Tenant tenant = tenantService.getTenantById(tenantID);
         if (tenant == null){
             GUI.showErrorMessageBox("Error!","No tenant found!","");
@@ -203,9 +202,9 @@ public class HomeController implements Observer {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tenant/notifications.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        Notifications notifications = fxmlLoader.getController();
-        notifications.setTenant(tenant);
-        stage.setTitle("Payment");
+        NotificationsController notificationsController = fxmlLoader.getController();
+        notificationsController.setTenant(tenant);
+        stage.setTitle("Notifications for "+tenant.getFirstName()+ " " + tenant.getLastName());
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
@@ -304,7 +303,6 @@ public class HomeController implements Observer {
     public void onShowRentedProperty(ActionEvent actionEvent){
         Collection<Property> properties = new ArrayList<>();
         for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
-            System.out.println("Type: "+propertyType);
             Collection<Property> propertyCollection = propertyService.getPropertiesByStatus(propertyType, Property.AVAILABILITY_TYPE.RENTED);
             if(propertyCollection.size() == 0){
                 System.out.println(String.format("No property found for %s type!",propertyType));
