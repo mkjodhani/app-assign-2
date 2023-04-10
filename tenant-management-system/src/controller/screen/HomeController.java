@@ -42,8 +42,6 @@ public class HomeController implements Observer {
     private VBox tenantList;
     @FXML
     private VBox leaseList;
-
-    private Stage stage;
     private void initializePropertyList(){
         Platform.runLater(() ->{
             try{
@@ -174,7 +172,6 @@ public class HomeController implements Observer {
         });
     }
     public void initialize(){
-
         MockData.getReference().addObserver(this);
         initializePropertyList();
         initializeTenantList();
@@ -186,159 +183,190 @@ public class HomeController implements Observer {
         initialize();
     }
     public void onShowInterestedPropertyClick(ActionEvent actionEvent) {
-        int tenantID =  GUI.getIntegerValue("Provide Tenant ID","Tenant ID");
-        Tenant tenant = tenantService.getTenantById(tenantID);
-        if (tenant == null){
-            GUI.showErrorMessageBox("Error!","No tenant found!","");
-            return;
-        }
-        int propertyID =  GUI.getIntegerValue("Provide Property ID","Property ID");
-        Property property = propertyService.getPropertyByID(propertyID);
-        if (property == null){
-            GUI.showErrorMessageBox("Error!","No property found!","");
-        }
-        property.addObserver(tenant);
-        GUI.showSuccessMessageBox("Success!","You have registered for the provided property.","You will get notification if the property status is updated.");
+        Platform.runLater(() ->{
+            int tenantID =  GUI.getIntegerValue("Provide Tenant ID","Tenant ID");
+            Tenant tenant = tenantService.getTenantById(tenantID);
+            if (tenant == null){
+                GUI.showErrorMessageBox("Error!","No tenant found!","");
+                return;
+            }
+            int propertyID =  GUI.getIntegerValue("Provide Property ID","Property ID");
+            Property property = propertyService.getPropertyByID(propertyID);
+            if (property == null){
+                GUI.showErrorMessageBox("Error!","No property found!","");
+            }
+            property.addObserver(tenant);
+            GUI.showSuccessMessageBox("Success!","You have registered for the provided property.","You will get notification if the property status is updated.");
+        });
     }
     public void onAboutUsClick(ActionEvent actionEvent) {
     }
     public void onShowNotificationsClick(ActionEvent actionEvent) throws IOException {
-        int tenantID = GUI.getIntegerValue("Tenant ID","Provide valid Tenant ID");
-        Tenant tenant = tenantService.getTenantById(tenantID);
-        if (tenant == null){
-            GUI.showErrorMessageBox("Error!","No tenant found!","");
-            return;
-        }
-        Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tenant/notifications.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        NotificationsController notificationsController = fxmlLoader.getController();
-        notificationsController.setTenant(tenant);
-        stage.setTitle("Notifications for "+tenant.getFirstName()+ " " + tenant.getLastName());
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        Platform.runLater(() ->{
+            try{
+                int tenantID = GUI.getIntegerValue("Tenant ID","Provide valid Tenant ID");
+                Tenant tenant = tenantService.getTenantById(tenantID);
+                if (tenant == null){
+                    GUI.showErrorMessageBox("Error!","No tenant found!","");
+                    return;
+                }
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/tenant/notifications.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                NotificationsController notificationsController = fxmlLoader.getController();
+                notificationsController.setTenant(tenant);
+                stage.setTitle("Notifications for "+tenant.getFirstName()+ " " + tenant.getLastName());
+                stage.setScene(scene);
+                stage.setResizable(false);
+                stage.show();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
     }
     public void onChangePropertyStatusClick(ActionEvent actionEvent) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Provide Property ID");
-        dialog.setContentText("Property ID");
-        Optional<String> propertyID = dialog.showAndWait();
-        if (!propertyID.isPresent()){
-            return;
-        }
-        try{
-            int propertyIDValue = Integer.valueOf(propertyID.get());
-            Property property = propertyService.getPropertyByID(propertyIDValue);
-            if (property != null){
-                Property.AVAILABILITY_TYPE selectedType = GUI.selectPropertyStatus();
-                if (selectedType != null){
-                    boolean result = propertyService.updatePropertyStatus(propertyIDValue,selectedType);
-                    if (result){
-                        GUI.showSuccessMessageBox("Success!","Lease terminated  successfully!","Property status has been updated.");
-                    }
-                    else {
-                        GUI.showErrorMessageBox("Error!","Something went wrong!","");
-                    }
-                }
-            }
-        }catch (Exception e){
-            GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
-        }
-    }
-    public void onRentPropertyClick(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/property/rent-property.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Rent Property");
-        stage.setScene(new Scene(root, 700, 450));
-        stage.show();
-    }
-    public void onTerminateLeaseClick(ActionEvent actionEvent) {
-        try{
-            int leaseIDValue =  GUI.getIntegerValue("Provide Lease ID","Lease ID");
-            if (leaseIDValue <=0){
+        Platform.runLater(() ->{
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Provide Property ID");
+            dialog.setContentText("Property ID");
+            Optional<String> propertyID = dialog.showAndWait();
+            if (!propertyID.isPresent()){
                 return;
             }
-            boolean result = propertyService.terminateLease(leaseIDValue);
-            if (result){
-                GUI.showSuccessMessageBox("Success!","Lease terminated  successfully!","Property status has been updated.");
-            }else {
-                GUI.showErrorMessageBox("Error!","Something went wrong!","");
+            try{
+                int propertyIDValue = Integer.valueOf(propertyID.get());
+                Property property = propertyService.getPropertyByID(propertyIDValue);
+                if (property != null){
+                    Property.AVAILABILITY_TYPE selectedType = GUI.selectPropertyStatus();
+                    if (selectedType != null){
+                        boolean result = propertyService.updatePropertyStatus(propertyIDValue,selectedType);
+                        if (result){
+                            GUI.showSuccessMessageBox("Success!","Lease terminated  successfully!","Property status has been updated.");
+                        }
+                        else {
+                            GUI.showErrorMessageBox("Error!","Something went wrong!","");
+                        }
+                    }
+                }
+            }catch (Exception e){
+                GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
             }
-        }catch (Exception e){
-            GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
-        }
+        });
+    }
+    public void onRentPropertyClick(ActionEvent actionEvent) throws IOException {
+        Platform.runLater(() ->{
+            try {
+                Parent root = null;
+                root = FXMLLoader.load(getClass().getResource("/property/rent-property.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Rent Property");
+                stage.setScene(new Scene(root, 700, 450));
+                stage.show();} catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+    public void onTerminateLeaseClick(ActionEvent actionEvent) {
+        Platform.runLater(() ->{
+            try{
+                int leaseIDValue =  GUI.getIntegerValue("Provide Lease ID","Lease ID");
+                if (leaseIDValue <=0){
+                    return;
+                }
+                boolean result = propertyService.terminateLease(leaseIDValue);
+                if (result){
+                    GUI.showSuccessMessageBox("Success!","Lease terminated  successfully!","Property status has been updated.");
+                }else {
+                    GUI.showErrorMessageBox("Error!","Something went wrong!","");
+                }
+            }catch (Exception e){
+                GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
+            }
+        });
     }
     public void onAddTenantClick(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/tenant/add-tenant.fxml"));
-        Stage stage = new Stage();
-        stage.setTitle("Tenant");
-        stage.setScene(new Scene(root, 700, 350));
-        stage.setFullScreen(false);
-        stage.setOnCloseRequest(e -> initializeTenantList());
-        stage.show();
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/tenant/add-tenant.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Tenant");
+            stage.setScene(new Scene(root, 700, 350));
+            stage.setFullScreen(false);
+            stage.setOnCloseRequest(e -> initializeTenantList());
+            stage.show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
     public void onAddPropertyClick(ActionEvent actionEvent) throws IOException {
-        String[] propertyTypes = new String[]{"Apartment","Condo","House"};
-        ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0],propertyTypes);
-        propertyTypeDialogBox.setTitle("Select Property Type");
-        Optional<String> selectedProperty = propertyTypeDialogBox.showAndWait();
-        if (selectedProperty.isPresent()){
-            if (selectedProperty.get().equals(propertyTypes[0])){
-                Parent root = FXMLLoader.load(getClass().getResource("/property/add-apartment.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("Apartment");
-                stage.setScene(new Scene(root, 700, 350));
-                stage.show();
-                stage.setOnCloseRequest(e -> {
-                    initializePropertyList();
-                });
-            }else if (selectedProperty.get().equals(propertyTypes[1])){
-                Parent root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("Condo");
-                stage.setScene(new Scene(root, 700, 350));
-                stage.show();
-                stage.setOnCloseRequest(e -> {
-                    initializePropertyList();
-                });
-            }
-            else {
-                Parent root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
-                Stage stage = new Stage();
-                stage.setTitle("House");
-                stage.setScene(new Scene(root, 700, 350));
-                stage.show();
-                stage.setOnCloseRequest(e -> {
-                    initializePropertyList();
-                });
-            }
-        }
-
-    }
-    public void onShowRentedProperty(ActionEvent actionEvent){
-        Collection<Property> properties = new ArrayList<>();
-        for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
-            Collection<Property> propertyCollection = propertyService.getPropertiesByStatus(propertyType, Property.AVAILABILITY_TYPE.RENTED);
-            if(propertyCollection.size() == 0){
-                System.out.println(String.format("No property found for %s type!",propertyType));
-            }
-            else{
-                for (Property house : propertyCollection){
-                    properties.add(house);
+        Platform.runLater(() ->{
+            try {
+                String[] propertyTypes = new String[]{"Apartment", "Condo", "House"};
+                ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0], propertyTypes);
+                propertyTypeDialogBox.setTitle("Select Property Type");
+                Optional<String> selectedProperty = propertyTypeDialogBox.showAndWait();
+                if (selectedProperty.isPresent()) {
+                    if (selectedProperty.get().equals(propertyTypes[0])) {
+                        Parent root = FXMLLoader.load(getClass().getResource("/property/add-apartment.fxml"));
+                        Stage stage = new Stage();
+                        stage.setTitle("Apartment");
+                        stage.setScene(new Scene(root, 700, 350));
+                        stage.show();
+                        stage.setOnCloseRequest(e -> {
+                            initializePropertyList();
+                        });
+                    } else if (selectedProperty.get().equals(propertyTypes[1])) {
+                        Parent root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
+                        Stage stage = new Stage();
+                        stage.setTitle("Condo");
+                        stage.setScene(new Scene(root, 700, 350));
+                        stage.show();
+                        stage.setOnCloseRequest(e -> {
+                            initializePropertyList();
+                        });
+                    } else {
+                        Parent root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
+                        Stage stage = new Stage();
+                        stage.setTitle("House");
+                        stage.setScene(new Scene(root, 700, 350));
+                        stage.show();
+                        stage.setOnCloseRequest(e -> {
+                            initializePropertyList();
+                        });
+                    }
                 }
             }
-        }
-        showPropertyList(properties,"Rented Properties");
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+    public void onShowRentedProperty(ActionEvent actionEvent){
+       Platform.runLater(() ->{
+           Collection<Property> properties = new ArrayList<>();
+           for(Property.PROPERTY_TYPE propertyType: Property.PROPERTY_TYPE.values()){
+               Collection<Property> propertyCollection = propertyService.getPropertiesByStatus(propertyType, Property.AVAILABILITY_TYPE.RENTED);
+               if(propertyCollection.size() == 0){
+                   System.out.println(String.format("No property found for %s type!",propertyType));
+               }
+               else{
+                   for (Property house : propertyCollection){
+                       properties.add(house);
+                   }
+               }
+           }
+           showPropertyList(properties,"Rented Properties");
+       });
     }
     public void onShowVacantProperty(ActionEvent actionEvent){
-        Collection<Property> properties = new ArrayList<>();
-        for (Property property: propertyService.getAll()){
-            if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED){
-                properties.add(property);
+        Platform.runLater(() ->{
+            Collection<Property> properties = new ArrayList<>();
+            for (Property property: propertyService.getAll()){
+                if(property.getStatus() != Property.AVAILABILITY_TYPE.RENTED){
+                    properties.add(property);
+                }
             }
-        }
-        showPropertyList(properties,"Vacant Properties");
+            showPropertyList(properties,"Vacant Properties");
+        });
     }
     private void showPropertyList(Collection<Property> properties,String title){
         TableView tableView = new TableView();
@@ -394,54 +422,58 @@ public class HomeController implements Observer {
         showTenantList(tenants,"Tenants with paid rent");
     }
     private void showTenantList(Collection<Tenant> tenants,String title){
-        TableView tableView = new TableView();
-        TableColumn<Tenant, String> idCol = new TableColumn<>("Tenant ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        Platform.runLater(() ->{
+            TableView tableView = new TableView();
+            TableColumn<Tenant, String> idCol = new TableColumn<>("Tenant ID");
+            idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<Property, String> firstNameCol = new TableColumn<>("First Name");
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+            TableColumn<Property, String> firstNameCol = new TableColumn<>("First Name");
+            firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 
-        TableColumn<Property, String> lastNameCol = new TableColumn<>("Last Name");
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+            TableColumn<Property, String> lastNameCol = new TableColumn<>("Last Name");
+            lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 
-        TableColumn<Property, String> dateOfBirthCol = new TableColumn<>("Date Of Birth");
-        dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+            TableColumn<Property, String> dateOfBirthCol = new TableColumn<>("Date Of Birth");
+            dateOfBirthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
 
-        TableColumn<Property, String> emailCol = new TableColumn<>("Email");
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
+            TableColumn<Property, String> emailCol = new TableColumn<>("Email");
+            emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-        tableView.getColumns().add(idCol);
-        tableView.getColumns().add(firstNameCol);
-        tableView.getColumns().add(lastNameCol);
-        tableView.getColumns().add(dateOfBirthCol);
-        tableView.getColumns().add(emailCol);
-        tableView.setItems(FXCollections.observableArrayList(tenants));
-        tableView.setPlaceholder(new Label("No tenants found!"));
-        Stage stage = new Stage();
-        Scene scene = new Scene(tableView);
-        stage.setScene(scene);
-        stage.setTitle(title);
-        stage.show();
+            tableView.getColumns().add(idCol);
+            tableView.getColumns().add(firstNameCol);
+            tableView.getColumns().add(lastNameCol);
+            tableView.getColumns().add(dateOfBirthCol);
+            tableView.getColumns().add(emailCol);
+            tableView.setItems(FXCollections.observableArrayList(tenants));
+            tableView.setPlaceholder(new Label("No tenants found!"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(tableView);
+            stage.setScene(scene);
+            stage.setTitle(title);
+            stage.show();
+        });
     }
     public void payRent(ActionEvent actionEvent) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Provide Lease ID");
-        dialog.setContentText("Lease ID");
-        Optional<String> leaseID = dialog.showAndWait();
+        Platform.runLater(() ->{
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Provide Lease ID");
+            dialog.setContentText("Lease ID");
+            Optional<String> leaseID = dialog.showAndWait();
 
-        if (!leaseID.isPresent()){
-            return;
-        }
-        try{
-            int leaseIDValue = Integer.valueOf(leaseID.get());
-            boolean result = propertyService.payRent(leaseIDValue);
-            if (result){
-                GUI.showSuccessMessageBox("Success!","Transaction recorded successfully!","Rent has been paid successfully!");
-            }else {
-                GUI.showErrorMessageBox("Error!","Something went wrong!","");
+            if (!leaseID.isPresent()){
+                return;
             }
-        }catch (Exception e){
-            GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
-        }
+            try{
+                int leaseIDValue = Integer.valueOf(leaseID.get());
+                boolean result = propertyService.payRent(leaseIDValue);
+                if (result){
+                    GUI.showSuccessMessageBox("Success!","Transaction recorded successfully!","Rent has been paid successfully!");
+                }else {
+                    GUI.showErrorMessageBox("Error!","Something went wrong!","");
+                }
+            }catch (Exception e){
+                GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
+            }
+        });
     }
 }
