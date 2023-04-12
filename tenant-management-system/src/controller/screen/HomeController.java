@@ -132,7 +132,6 @@ public class HomeController implements Observer {
             try{
                 TableView tableView = new TableView();
 
-
                 TableColumn<Lease, String> leaseIdCol = new TableColumn<>("Lease ID");
                 leaseIdCol.setCellValueFactory(new PropertyValueFactory<>("leaseId"));
 
@@ -183,7 +182,7 @@ public class HomeController implements Observer {
         initialize();
     }
     public void onShowInterestedPropertyClick(ActionEvent actionEvent) {
-        Platform.runLater(() ->{
+        Thread thread = new Thread(() ->{
             int tenantID =  GUI.getIntegerValue("Provide Tenant ID","Tenant ID");
             Tenant tenant = tenantService.getTenantById(tenantID);
             if (tenant == null){
@@ -198,11 +197,10 @@ public class HomeController implements Observer {
             property.addObserver(tenant);
             GUI.showSuccessMessageBox("Success!","You have registered for the provided property.","You will get notification if the property status is updated.");
         });
-    }
-    public void onAboutUsClick(ActionEvent actionEvent) {
+        thread.start();
     }
     public void onShowNotificationsClick(ActionEvent actionEvent) throws IOException {
-        Platform.runLater(() ->{
+        Thread thread = new Thread(() ->{
             try{
                 int tenantID = GUI.getIntegerValue("Tenant ID","Provide valid Tenant ID");
                 Tenant tenant = tenantService.getTenantById(tenantID);
@@ -223,9 +221,10 @@ public class HomeController implements Observer {
                 e.printStackTrace();
             }
         });
+        thread.start();
     }
     public void onChangePropertyStatusClick(ActionEvent actionEvent) {
-        Platform.runLater(() ->{
+        Thread thread = new Thread(() ->{
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Provide Property ID");
             dialog.setContentText("Property ID");
@@ -252,9 +251,10 @@ public class HomeController implements Observer {
                 GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
             }
         });
+        thread.start();
     }
     public void onRentPropertyClick(ActionEvent actionEvent) throws IOException {
-        Platform.runLater(() ->{
+        Thread thread = new Thread(() ->{
             try {
                 Parent root = null;
                 root = FXMLLoader.load(getClass().getResource("/property/rent-property.fxml"));
@@ -265,9 +265,10 @@ public class HomeController implements Observer {
                 throw new RuntimeException(e);
             }
         });
+        thread.start();
     }
     public void onTerminateLeaseClick(ActionEvent actionEvent) {
-        Platform.runLater(() ->{
+        Thread thread = new Thread(() ->{
             try{
                 int leaseIDValue =  GUI.getIntegerValue("Provide Lease ID","Lease ID");
                 if (leaseIDValue <=0){
@@ -283,62 +284,85 @@ public class HomeController implements Observer {
                 GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
             }
         });
+        thread.start();
     }
     public void onAddTenantClick(ActionEvent actionEvent) throws IOException {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/tenant/add-tenant.fxml"));
-            Stage stage = new Stage();
-            stage.setTitle("Tenant");
-            stage.setScene(new Scene(root, 700, 350));
-            stage.setFullScreen(false);
-            stage.setOnCloseRequest(e -> initializeTenantList());
-            stage.show();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void onAddPropertyClick(ActionEvent actionEvent) throws IOException {
-        Platform.runLater(() ->{
+        Thread thread = new Thread(() ->{
             try {
-                String[] propertyTypes = new String[]{"Apartment", "Condo", "House"};
-                ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0], propertyTypes);
-                propertyTypeDialogBox.setTitle("Select Property Type");
-                Optional<String> selectedProperty = propertyTypeDialogBox.showAndWait();
-                if (selectedProperty.isPresent()) {
-                    if (selectedProperty.get().equals(propertyTypes[0])) {
-                        Parent root = FXMLLoader.load(getClass().getResource("/property/add-apartment.fxml"));
-                        Stage stage = new Stage();
-                        stage.setTitle("Apartment");
-                        stage.setScene(new Scene(root, 700, 350));
-                        stage.show();
-                        stage.setOnCloseRequest(e -> {
-                            initializePropertyList();
-                        });
-                    } else if (selectedProperty.get().equals(propertyTypes[1])) {
-                        Parent root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
-                        Stage stage = new Stage();
-                        stage.setTitle("Condo");
-                        stage.setScene(new Scene(root, 700, 350));
-                        stage.show();
-                        stage.setOnCloseRequest(e -> {
-                            initializePropertyList();
-                        });
-                    } else {
-                        Parent root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
-                        Stage stage = new Stage();
-                        stage.setTitle("House");
-                        stage.setScene(new Scene(root, 700, 350));
-                        stage.show();
-                        stage.setOnCloseRequest(e -> {
-                            initializePropertyList();
-                        });
-                    }
-                }
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
+                Parent root = FXMLLoader.load(getClass().getResource("/tenant/add-tenant.fxml"));
+                Stage stage = new Stage();
+                stage.setTitle("Tenant");
+                stage.setScene(new Scene(root, 700, 350));
+                stage.setFullScreen(false);
+                stage.setOnCloseRequest(e -> initializeTenantList());
+                stage.show();
+            }catch (Exception e){
+                e.printStackTrace();
             }
         });
+        thread.start();
+    }
+    public void onAddPropertyClick(ActionEvent actionEvent) throws IOException {
+        Thread thread = new Thread(() ->{
+            String[] propertyTypes = new String[]{"Apartment", "Condo", "House"};
+            ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0], propertyTypes);
+            propertyTypeDialogBox.setTitle("Select Property Type");
+            Optional<String> selectedProperty = propertyTypeDialogBox.showAndWait();
+            if (selectedProperty.isPresent()) {
+                if (selectedProperty.get().equals(propertyTypes[0])) {
+                    Platform.runLater(() ->{
+                        Parent root = null;
+                        try {
+                            root = FXMLLoader.load(getClass().getResource("/property/add-apartment.fxml"));
+                            Stage stage = new Stage();
+                            stage.setTitle("Apartment");
+                            stage.setScene(new Scene(root, 700, 350));
+                            stage.show();
+                            stage.setOnCloseRequest(e -> {
+                                initializePropertyList();
+                            });
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+                } else if (selectedProperty.get().equals(propertyTypes[1])) {
+                   Platform.runLater(() ->{
+                       Parent root = null;
+                       try {
+                           root = FXMLLoader.load(getClass().getResource("/property/add-condo.fxml"));
+                           Stage stage = new Stage();
+                           stage.setTitle("Condo");
+                           stage.setScene(new Scene(root, 700, 350));
+                           stage.show();
+                           stage.setOnCloseRequest(e -> {
+                               initializePropertyList();
+                           });
+                       } catch (IOException e) {
+                           throw new RuntimeException(e);
+                       }
+                   });
+                } else {
+                    Thread thread1 = new Thread(() ->{
+                        Parent root = null;
+                        try {
+                            root = FXMLLoader.load(getClass().getResource("/property/add-house.fxml"));
+                            Stage stage = new Stage();
+                            stage.setTitle("House");
+                            stage.setScene(new Scene(root, 700, 350));
+                            stage.show();
+                            stage.setOnCloseRequest(e -> {
+                                initializePropertyList();
+                            });
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    });
+                    thread1.start();
+                }
+            }
+        });
+        thread.start();
     }
     public void onShowRentedProperty(ActionEvent actionEvent){
        Platform.runLater(() ->{

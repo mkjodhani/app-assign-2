@@ -5,8 +5,6 @@ import model.notificaiton.Message;
 import model.person.Tenant;
 import model.property.Lease;
 import model.property.Property;
-
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Observable;
 
