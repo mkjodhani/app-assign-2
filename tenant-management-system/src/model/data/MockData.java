@@ -31,8 +31,6 @@ public class MockData extends Observable{
         properties.put(Property.PROPERTY_TYPE.APARTMENT,new HashMap<>());
         properties.put(Property.PROPERTY_TYPE.CONDO,new HashMap<>());
         properties.put(Property.PROPERTY_TYPE.HOUSE,new HashMap<>());
-
-
     }
 
     public static MockData getReference(){

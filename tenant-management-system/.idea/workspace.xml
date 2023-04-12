@@ -81,7 +81,7 @@
       <recent name="test.accounting" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.GUI">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="CLI" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="view.CLI" />
       <module name="tenant-management-system" />
@@ -92,6 +92,19 @@
     <configuration name="GUI" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="view.GUI" />
       <module name="tenant-management-system" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="example.collections.Main" />
+      <module name="tenant-management-system" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="example.collections.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -143,12 +156,14 @@
     <list>
       <item itemvalue="Application.GUI" />
       <item itemvalue="Application.CLI" />
+      <item itemvalue="Application.Main" />
       <item itemvalue="Application.TestRunner" />
       <item itemvalue="JUnit.AccountingServiceTest" />
       <item itemvalue="JUnit.TestSuite" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.TestSuite" />
         <item itemvalue="JUnit.AccountingServiceTest" />
         <item itemvalue="Application.TestRunner" />
@@ -208,7 +223,7 @@
       <workItem from="1680803318829" duration="3423000" />
       <workItem from="1681106598848" duration="4000" />
       <workItem from="1681250234566" duration="306000" />
-      <workItem from="1681250881650" duration="4158000" />
+      <workItem from="1681250881650" duration="5582000" />
     </task>
     <servers />
   </component>
