@@ -8,7 +8,6 @@ public class Main {
         Animal a1 = new Animal("animal1",1);
         Animal a2 = new Animal("animal2",2);
         Animal a3 = new Animal("animal3",3);
-        Animal a4 = new Animal("animal4",4);
         st.add(a1);
         st.add(a2);
         st.add(a3);

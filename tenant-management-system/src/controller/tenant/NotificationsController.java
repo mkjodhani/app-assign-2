@@ -1,22 +1,14 @@
 package controller.tenant;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import model.notificaiton.Message;
 import model.person.Tenant;
-
-import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -32,7 +24,6 @@ public class NotificationsController implements Observer {
 
     private void loadData(){
         VBox list = new VBox(10);
-
         for (Message message:tenant.getMessages()){
             VBox notification = new VBox(5);
             notification.setPrefWidth(400);
@@ -60,9 +51,6 @@ public class NotificationsController implements Observer {
         this.tenant = tenant;
         tenant.addObserver(this);
         loadData();
-    }
-    public void setTenantID(int tenantIDValue){
-        System.out.println("setTenantID");
     }
     @Override
     public void update(Observable o, Object arg) {
