@@ -182,21 +182,25 @@ public class HomeController implements Observer {
         initialize();
     }
     public void onShowInterestedPropertyClick(ActionEvent actionEvent) {
-        int tenantID =  GUI.getIntegerValue("Provide Tenant ID","Tenant ID");
-        Tenant tenant = tenantService.getTenantById(tenantID);
-        if (tenant == null){
-            GUI.showErrorMessageBox("Error!","No tenant found!","");
-            return;
-        }
-        int propertyID =  GUI.getIntegerValue("Provide Property ID","Property ID");
-        Property property = propertyService.getPropertyByID(propertyID);
-        if (property == null){
-            GUI.showErrorMessageBox("Error!","No property found!","");
-        }
-        property.addObserver(tenant);
-        GUI.showSuccessMessageBox("Success!","You have registered for the provided property.","You will get notification if the property status is updated.");
+        Thread thread = new Thread(() ->{
+            int tenantID =  GUI.getIntegerValue("Provide Tenant ID","Tenant ID");
+            Tenant tenant = tenantService.getTenantById(tenantID);
+            if (tenant == null){
+                GUI.showErrorMessageBox("Error!","No tenant found!","");
+                return;
+            }
+            int propertyID =  GUI.getIntegerValue("Provide Property ID","Property ID");
+            Property property = propertyService.getPropertyByID(propertyID);
+            if (property == null){
+                GUI.showErrorMessageBox("Error!","No property found!","");
+            }
+            property.addObserver(tenant);
+            GUI.showSuccessMessageBox("Success!","You have registered for the provided property.","You will get notification if the property status is updated.");
+        });
+        thread.start();
     }
     public void onShowNotificationsClick(ActionEvent actionEvent) throws IOException {
+        Thread thread = new Thread(() ->{
             try{
                 int tenantID = GUI.getIntegerValue("Tenant ID","Provide valid Tenant ID");
                 Tenant tenant = tenantService.getTenantById(tenantID);
@@ -216,8 +220,11 @@ public class HomeController implements Observer {
             }catch (Exception e){
                 e.printStackTrace();
             }
+        });
+        thread.start();
     }
     public void onChangePropertyStatusClick(ActionEvent actionEvent) {
+        Thread thread = new Thread(() ->{
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Provide Property ID");
             dialog.setContentText("Property ID");
@@ -243,8 +250,11 @@ public class HomeController implements Observer {
             }catch (Exception e){
                 GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
             }
+        });
+        thread.start();
     }
     public void onRentPropertyClick(ActionEvent actionEvent) throws IOException {
+        Thread thread = new Thread(() ->{
             try {
                 Parent root = null;
                 root = FXMLLoader.load(getClass().getResource("/property/rent-property.fxml"));
@@ -254,8 +264,11 @@ public class HomeController implements Observer {
                 stage.show();} catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        });
+        thread.start();
     }
     public void onTerminateLeaseClick(ActionEvent actionEvent) {
+        Thread thread = new Thread(() ->{
             try{
                 int leaseIDValue =  GUI.getIntegerValue("Provide Lease ID","Lease ID");
                 if (leaseIDValue <=0){
@@ -270,8 +283,11 @@ public class HomeController implements Observer {
             }catch (Exception e){
                 GUI.showSuccessMessageBox("Error!","Something went wrong!",e.getMessage());
             }
+        });
+        thread.start();
     }
     public void onAddTenantClick(ActionEvent actionEvent) throws IOException {
+        Thread thread = new Thread(() ->{
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/tenant/add-tenant.fxml"));
                 Stage stage = new Stage();
@@ -283,8 +299,11 @@ public class HomeController implements Observer {
             }catch (Exception e){
                 e.printStackTrace();
             }
+        });
+        thread.start();
     }
     public void onAddPropertyClick(ActionEvent actionEvent) throws IOException {
+        Thread thread = new Thread(() ->{
             String[] propertyTypes = new String[]{"Apartment", "Condo", "House"};
             ChoiceDialog<String> propertyTypeDialogBox = new ChoiceDialog<>(propertyTypes[0], propertyTypes);
             propertyTypeDialogBox.setTitle("Select Property Type");
@@ -342,6 +361,8 @@ public class HomeController implements Observer {
                     thread1.start();
                 }
             }
+        });
+        thread.start();
     }
     public void onShowRentedProperty(ActionEvent actionEvent){
        Platform.runLater(() ->{

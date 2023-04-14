@@ -69,8 +69,8 @@ public class GUI extends Application implements Observer {
     }
 
     public static void main(String[] args) {
-        importDummyData();
         launch(args);
+        importDummyData();
     }
 
     @Override

@@ -81,7 +81,7 @@
       <recent name="test.accounting" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.GUI">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="CLI" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="view.CLI" />
       <module name="tenant-management-system" />
@@ -223,9 +223,7 @@
       <workItem from="1680803318829" duration="3423000" />
       <workItem from="1681106598848" duration="4000" />
       <workItem from="1681250234566" duration="306000" />
-      <workItem from="1681250881650" duration="6501000" />
-      <workItem from="1681503674896" duration="163000" />
-      <workItem from="1681503845380" duration="638000" />
+      <workItem from="1681250881650" duration="6185000" />
     </task>
     <servers />
   </component>
