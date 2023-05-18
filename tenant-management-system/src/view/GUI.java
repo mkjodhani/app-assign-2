@@ -5,20 +5,15 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.geography.Address;
-import model.person.Tenant;
 import model.property.Condo;
-import model.property.House;
 import model.property.Property;
 import services.accounting.AccountingService;
 import services.property.PropertyService;
 import services.users.TenantService;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -27,6 +22,7 @@ import java.util.*;
  * @project Tenant Management System
  * @since 15/03/23
  */
+
 public class GUI extends Application implements Observer {
 
     public static void importDummyData(){

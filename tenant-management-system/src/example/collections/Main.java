@@ -12,7 +12,7 @@ public class Main {
         Animal a3 = new Animal("animal3",3);
         Animal a4 = new Animal("animal4",4);
         //INFO: Code for compare two set functionality
-        /*st.add(a1);
+        st.add(a1);
         st.add(a2);
         st.add(a3);
         st1.add(a1);
@@ -27,7 +27,7 @@ public class Main {
             System.out.println("Both are equal");
         }else {
             System.out.println("Both are not equal");
-        }*/
+        }
 
         int choice=0;
         while(true){
