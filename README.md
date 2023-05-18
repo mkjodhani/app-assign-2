@@ -44,39 +44,12 @@ Class Diagram:
   </p>
 <p align="center">
   <img src="assets/images/image-006.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-007.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-008.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-009.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-010.png"/>
-  </p>
+</p>
 <p align="center">
   <img src="assets/images/image-011.png"/>
   </p>
 <p align="center">
-  <img src="assets/images/image-012.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-013.png"/>
-  </p>
-<p align="center">
   <img src="assets/images/image-014.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-015.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-016.png"/>
-  </p>
-<p align="center">
-  <img src="assets/images/image-017.png"/>
   </p>
 <p align="center">
   <img src="assets/images/image-018.png"/>
